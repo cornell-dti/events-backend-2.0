@@ -2,9 +2,11 @@
   "name": "events_backend",
   "version": "1.0.0",
   "description": "Events backend",
-  "main": "app.js",
+  "main": "app.ts",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "tsc": "tsc",
+    "start": "npm run tsc && node build/app.js"
   },
   "repository": {
     "type": "git",
@@ -21,9 +23,12 @@
   },
   "homepage": "https://github.com/JBoss925/EventsBackend#readme",
   "dependencies": {
+    "@types/express": "^4.17.2",
     "base": "^3.0.0",
     "express": "^4.17.1",
+    "firebase-admin": "^8.8.0",
     "js-data": "^3.0.8",
-    "js-data-firebase": "^3.2.1"
+    "js-data-firebase": "^3.2.1",
+    "typescript": "^3.7.2"
   }
 }
