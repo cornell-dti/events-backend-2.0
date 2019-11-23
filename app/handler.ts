@@ -1,6 +1,7 @@
 import { Request, Response } from "express-serve-static-core";
 import { firestore } from "firebase";
 import { Event, Org } from "./types"
+import { EventRequest } from "./requestTypes";
 
 export function doTestPut(db: firestore.Firestore, req: Request, res: Response) {
   let cityRef = db.collection('cities').doc('LA');
@@ -17,8 +18,8 @@ export function doTestPut(db: firestore.Firestore, req: Request, res: Response) 
 }
 
 export function doTestGet(db: firestore.Firestore, req: Request, res: Response) {
-  let cityRef = db.collection('testEvent').doc('2');
-  let getDoc = cityRef.get().then(doc => {
+  let eventRef = db.collection('testEvent').doc('2');
+  eventRef.get().then(doc => {
     if (!doc.exists) {
       console.log('No such document!');
       res.send({ error: "No such document" });
@@ -29,5 +30,5 @@ export function doTestGet(db: firestore.Firestore, req: Request, res: Response) 
         res.send(city.data());
       })
     }
-  })
+  });
 }
