@@ -1,11 +1,27 @@
 import { Request, Response } from "express-serve-static-core";
 import { Express } from "express";
 
-const express = require('express')
+// Express ---------------------------------------------------------------------
+const express = require('express');
 const app: Express = express()
-var admin = require('firebase-admin');
 const port = 3000;
+// -----------------------------------------------------------------------------
 
-app.get('/', (req: Request, res: Response) => res.send('Hello World!'))
+// Firebase --------------------------------------------------------------------
+let admin = require('firebase-admin');
+// let serviceAccount = require('path/to/serviceAccountKey.json');
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount)
+// });
+// let db = admin.firestore();
+// -----------------------------------------------------------------------------
+
+function main() {
+  app.get('/', (req: Request, res: Response) => res.send('Hello World!'))
+
+  app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+}
+
+main();
+
