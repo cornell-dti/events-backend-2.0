@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/JBoss925/EventsBackend#readme",
   "dependencies": {
+    "@firebase/firestore-types": "^1.8.0",
     "@types/express": "^4.17.2",
     "@types/firebase": "^3.2.1",
     "base": "^3.0.0",
