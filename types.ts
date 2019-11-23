@@ -1,16 +1,27 @@
 // Models
+import { firestore } from "firebase";
 
-export type Event = {
+
+export class Event {
 
   name: string;
   id: number;
-  yeet: string;
+  ref: firestore.DocumentReference;
 
+  constructor(name: string, id: number, ref: firestore.DocumentReference) {
+    this.name = name;
+    this.id = id;
+    this.ref = ref;
+  }
 }
 
-export type Org = {
+export class Org {
 
   name: string;
   id: number;
 
+  constructor(name: string, id: number, refs: firestore.DocumentReference) {
+    this.name = name;
+    this.id = id;
+  }
 }

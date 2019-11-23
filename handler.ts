@@ -3,10 +3,11 @@ import { firestore } from "firebase";
 import { Event, Org } from "./types"
 
 export function doTestPut(db: firestore.Firestore, req: Request, res: Response) {
+  let cityRef = db.collection('cities').doc('LA');
   let event: Event = {
     name: 'Los Angeles',
     id: 2,
-    yeet: "yeet"
+    ref: cityRef
   };
 
   // Add a new document in collection "cities" with ID 'LA'
@@ -23,7 +24,10 @@ export function doTestGet(db: firestore.Firestore, req: Request, res: Response) 
       res.send({ error: "No such document" });
     } else {
       console.log('Document data:', doc.data());
-      res.send(doc.data());
+      let yk: Event = doc.data() as Event;
+      yk.ref.get().then(city => {
+        res.send(city.data());
+      })
     }
   })
 }
