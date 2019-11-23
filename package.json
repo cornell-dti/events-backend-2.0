@@ -1,0 +1,29 @@
+{
+  "name": "events_backend",
+  "version": "1.0.0",
+  "description": "Events backend",
+  "main": "app.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JBoss925/EventsBackend.git"
+  },
+  "keywords": [
+    "events",
+    "cornell"
+  ],
+  "author": "several",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JBoss925/EventsBackend/issues"
+  },
+  "homepage": "https://github.com/JBoss925/EventsBackend#readme",
+  "dependencies": {
+    "base": "^3.0.0",
+    "express": "^4.17.1",
+    "js-data": "^3.0.8",
+    "js-data-firebase": "^3.2.1"
+  }
+}
