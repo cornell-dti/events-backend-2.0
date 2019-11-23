@@ -11,4 +11,6 @@ Get the private key credential json file from a TPM or PM, and place that file t
 
 Run <code>npm install</code>
 
+## How to run
+
 Run <code>npm start</code>
