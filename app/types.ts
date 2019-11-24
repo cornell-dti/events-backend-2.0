@@ -1,19 +1,16 @@
 // Models
 import { firestore } from "firebase";
 
-
-export class Event {
+export interface Event {
 
   name: string;
   id: number;
+  // nums: number[];
   ref: firestore.DocumentReference;
+  collectionRef: firestore.DocumentReference[];
 
-  constructor(name: string, id: number, ref: firestore.DocumentReference) {
-    this.name = name;
-    this.id = id;
-    this.ref = ref;
-  }
 }
+export default Event;
 
 export class Org {
 
