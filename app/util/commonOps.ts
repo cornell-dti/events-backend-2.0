@@ -3,7 +3,7 @@
 import { firestore } from "firebase";
 
 /**
- * This functino takes a collection reference and turns it into an array
+ * This function takes a collection reference and turns it into an array
  * of its constituent document references
  * 
  * @param coll the collection to convert into a docref array
