@@ -1,6 +1,5 @@
 # EventsBackend
 
-
 ## How to install
 
 First, clone the repository.

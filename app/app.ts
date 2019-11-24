@@ -1,3 +1,6 @@
+// This file is the entry point of the app and also routes the urls to specific
+// handling methods in the handler.
+
 import { Request, Response } from "express-serve-static-core";
 import { Express } from "express";
 import * as handler from "./handler";

@@ -1,11 +1,12 @@
 // Models
+
 import { firestore } from "firebase";
 
 export interface Event {
 
   name: string;
   id: number;
-  // nums: number[];
+  nums: number[];
   ref: firestore.DocumentReference;
   collectionRef: firestore.DocumentReference[];
 
