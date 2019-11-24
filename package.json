@@ -29,8 +29,8 @@
     "base": "^3.0.0",
     "express": "^4.17.1",
     "firebase-admin": "^8.8.0",
+    "growl": "^1.10.5",
     "js-data": "^3.0.8",
-    "js-data-firebase": "^3.2.1",
     "typescript": "^3.7.2"
   }
 }
