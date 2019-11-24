@@ -2,7 +2,7 @@
 
 import { firestore } from "firebase";
 
-export interface Event {
+export type Event = {
 
   name: string;
   id: number;
@@ -11,7 +11,6 @@ export interface Event {
   collectionRef: firestore.DocumentReference[];
 
 }
-export default Event;
 
 export class Org {
 
