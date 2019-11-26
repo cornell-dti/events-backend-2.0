@@ -42,7 +42,7 @@ let currentlyRunningTest: Function;
 let pageWidth = 150;
 
 
-let getMethods = (obj: any) => Object.getOwnPropertyNames(obj).filter(item => typeof obj[item] === 'function').map(item => obj[item] as Function);
+let getMethods = (obj: any) => Object.getOwnPropertyNames(obj).filter(item => typeof obj[item] === 'function' && obj[item].name.toString().toLowerCase().includes("test")).map(item => obj[item] as Function);
 
 async function start() {
   let files = fs.readdirSync(__dirname + '/tests/');
