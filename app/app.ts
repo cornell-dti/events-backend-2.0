@@ -4,7 +4,7 @@
 import { Request, Response } from "express-serve-static-core";
 import { Express } from "express";
 // import * as handler from "./handler";
-import * as testHandler from "./test_handler";
+import * as userHandler from "./userHandler";
 
 // Express ---------------------------------------------------------------------
 const express = require('express');
@@ -24,13 +24,10 @@ let db = admin.firestore();
 // -----------------------------------------------------------------------------
 
 function main() {
-  app.get('/testPut/', (req: Request, res: Response) => testHandler.doTestPut(db, req, res))
-  app.get('/testGet/', (req: Request, res: Response) => testHandler.doTestGet(db, req, res))
-  app.get('/testGet2/', (req: Request, res: Response) => testHandler.doTestGet2(db, req, res))
-  app.get('/testGet3/', (req: Request, res: Response) => testHandler.doTestGet3(db, req, res))
+  app.post('/createUser/', (req: Request, res: Response) => userHandler.createUser(db, req, res))
+  app.get('/getUser/', (req: Request, res: Response) => userHandler.getUser(db, req, res))
 
   app.listen(port, () => console.log(`Backend running on http://localhost:${port}`))
 }
-
 main();
 
