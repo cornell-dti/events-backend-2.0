@@ -100,7 +100,12 @@ function endTests() {
 let maxValPrintLen = 25;
 
 export function triggerReturn(exp: testExtensions.Expectation) {
-  let expStr = (exp.expectVal.toString().length > maxValPrintLen ? exp.expectVal.toString().slice(0, 15) + "..." : exp.expectVal.toString());
+  let expStr;
+  if (exp.expectVal == undefined) {
+    expStr = "undefined";
+  } else {
+    expStr = (exp.expectVal.toString().length > maxValPrintLen ? exp.expectVal.toString().slice(0, 15) + "..." : exp.expectVal.toString());
+  }
   let actStr = (!isUndefined(exp.actualVal) ? " " + (exp.actualVal.toString().length > maxValPrintLen ? exp.actualVal.toString().slice(0, 15) + "..." : exp.actualVal.toString()) : "")
   restrainedLog("| -- Expect " + expStr + " " + exp.operator.constructor.name + " " + exp.functionName + actStr + " " + (exp.passed ? chalk.magenta("passed!") : chalk.red("failed!")));
   restrainedLog("| ---- " + chalk.yellow("Status") + ": " + (exp.passed ? chalk.green("PASSED") : chalk.red("FAILED")));
