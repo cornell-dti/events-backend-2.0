@@ -63,9 +63,10 @@ async function runTest() {
   printLine();
   currentlyRunningTest = testClassTests[classIndex][testIndex];
   restrainedLog("|");
+  restrainedLog("|");
   restrainedLog("| " + chalk.cyan("Module") + ": " + chalk.yellow(testClassNames[classIndex]));
   restrainedLog("| " + chalk.cyan("Running test") + ": " + chalk.magenta(currentlyRunningTest.name));
-  restrainedLog("| ");
+  restrainedLog("|");
   await currentlyRunningTest.apply(null, [db]);
   nextTest();
   if (!testsOver) {
@@ -109,7 +110,7 @@ export function triggerReturn(exp: testExtensions.Expectation) {
   } else {
     passedTests.push(currentlyRunningTest);
   }
-  restrainedLog("| ");
+  restrainedLog("|");
 }
 
 if (typeof require !== 'undefined' && require.main === module) {
@@ -126,12 +127,14 @@ function printLine() {
     }
     line += "┐";
   } else if (lastLine) {
+    restrainedLog("|");
     line += "└";
     for (let i = 0; i <= pageWidth - 2; i++) {
       line = line + "-";
     }
     line += "┘";
   } else {
+    restrainedLog("|");
     line += "├";
     for (let i = 0; i <= pageWidth - 2; i++) {
       line = line + "-";
