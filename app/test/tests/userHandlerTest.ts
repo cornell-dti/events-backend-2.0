@@ -13,10 +13,6 @@ export async function runCreateTest(db: firestore.Firestore) {
     {
       method: 'POST',
       url: '/createUser/',
-      cookies: { token: "MYTOKEN" },
-      headers: {
-        'Accept': 'text/plain'
-      },
       body: {
         name: "Jagger",
         email: "jaggerbrulato@gmail.com",
@@ -40,10 +36,6 @@ export async function runGetTest(db: firestore.Firestore) {
     {
       method: 'GET',
       url: '/getUser/',
-      cookies: { token: "MYTOKEN" },
-      headers: {
-        'Accept': 'text/plain'
-      },
       body: {
         email: "jaggerbrulato@gmail.com",
         isOrgUser: true
@@ -55,6 +47,7 @@ export async function runGetTest(db: firestore.Firestore) {
   let orgUserResp: any;
   await db.collection('orgUsers').doc("jaggerbrulato@gmail.com").get()
     .then(doc => {
+      expect(doc.exists).toBe.equalTo(true);
       orgUserResp = doc.data();
     });
   expect(orgUserResp.name).is.defined();
@@ -67,10 +60,6 @@ export async function runDeleteTest(db: firestore.Firestore) {
     {
       method: 'POST',
       url: '/deleteUser/',
-      cookies: { token: "MYTOKEN" },
-      headers: {
-        'Accept': 'text/plain'
-      },
       body: {
         email: "jaggerbrulato@gmail.com",
         isOrgUser: true
