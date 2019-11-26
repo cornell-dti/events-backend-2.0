@@ -102,10 +102,10 @@ let maxValPrintLen = 25;
 export function triggerReturn(exp: testExtensions.Expectation) {
   let expStr = (exp.expectVal.toString().length > maxValPrintLen ? exp.expectVal.toString().slice(0, 15) + "..." : exp.expectVal.toString());
   let actStr = (!isUndefined(exp.actualVal) ? " " + (exp.actualVal.toString().length > maxValPrintLen ? exp.actualVal.toString().slice(0, 15) + "..." : exp.actualVal.toString()) : "")
-  restrainedLog("| -- Expect " + expStr + " " + exp.operator.constructor.name + " " + exp.functionName + actStr + chalk.magenta(" passed!"));
-  restrainedLog("| ---- " + chalk.yellow("Status") + ": " + (exp.passed ? FgGreen + "PASSED" + FgWhite : FgRed + "FAILED" + FgWhite));
+  restrainedLog("| -- Expect " + expStr + " " + exp.operator.constructor.name + " " + exp.functionName + actStr + " " + (exp.passed ? chalk.magenta("passed!") : chalk.red("failed!")));
+  restrainedLog("| ---- " + chalk.yellow("Status") + ": " + (exp.passed ? chalk.green("PASSED") : chalk.red("FAILED")));
   if (!exp.passed) {
-    restrainedLog("| -------- FAILED: Expected " + exp.expectVal + " " + exp.operator.constructor.name + " " + exp.functionName + " " + exp.actualVal + "!");
+    restrainedLog("| -------- " + chalk.red("FAILED") + ": Expected " + exp.expectVal + " " + exp.operator.constructor.name + " " + exp.functionName + " " + exp.actualVal + "!");
     failedTests.push(currentlyRunningTest);
   } else {
     passedTests.push(currentlyRunningTest);

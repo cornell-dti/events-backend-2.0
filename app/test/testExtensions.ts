@@ -34,7 +34,7 @@ class is {
       actualVal: undefined,
       operator: this.opInstance,
       functionName: "null",
-      passed: this.expectVal == null
+      passed: (this.expectVal == null)
     };
     testRunner.triggerReturn(triggerResponse);
   }
@@ -46,7 +46,7 @@ class is {
       actualVal: undefined,
       operator: this.opInstance,
       functionName: "undefined",
-      passed: this.expectVal == undefined
+      passed: (this.expectVal == undefined)
     };
     testRunner.triggerReturn(triggerResponse);
   }
@@ -58,7 +58,7 @@ class is {
       actualVal: undefined,
       operator: this.opInstance,
       functionName: "nullOrUndefined",
-      passed: this.expectVal == undefined || this.expectVal == null
+      passed: (this.expectVal == undefined || this.expectVal == null)
     };
     testRunner.triggerReturn(triggerResponse);
   }
@@ -70,7 +70,7 @@ class is {
       actualVal: undefined,
       operator: this.opInstance,
       functionName: "defined",
-      passed: this.expectVal != undefined
+      passed: (this.expectVal != undefined)
     };
     testRunner.triggerReturn(triggerResponse);
   }
@@ -94,7 +94,7 @@ class toBe {
       actualVal: val,
       operator: this.opInstance,
       functionName: "equalTo",
-      passed: val == this.expectVal
+      passed: (val == this.expectVal)
     };
     testRunner.triggerReturn(triggerFail);
   }
@@ -105,7 +105,7 @@ class toBe {
       actualVal: val,
       operator: this.opInstance,
       functionName: "greaterThan",
-      passed: val > this.expectVal
+      passed: (this.expectVal > val)
     };
     testRunner.triggerReturn(triggerFail);
   }
@@ -116,7 +116,7 @@ class toBe {
       actualVal: val,
       operator: this.opInstance,
       functionName: "lessThan",
-      passed: val < this.expectVal
+      passed: (this.expectVal < val)
     };
     testRunner.triggerReturn(triggerFail);
   }
