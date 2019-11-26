@@ -8,6 +8,28 @@ var MockExpressResponse = require('mock-express-response');
 
 // Begin Tests -----------------------------------------------------------------
 
+export async function runDeleteTest(db: firestore.Firestore) {
+
+  let mockRequest = new MockExpressRequest(
+    {
+      method: 'POST',
+      url: '/deleteUser/',
+      body: {
+        email: "jaggerbrulato@gmail.com",
+        isOrgUser: true
+      }
+    }
+  );
+  let mockRespsonse = new MockExpressResponse();
+  await userHandler.deleteUser(db, mockRequest, mockRespsonse);
+  let docExists;
+  await db.collection('orgUsers').doc(mockRequest.body.email).get().then(doc => {
+    docExists = doc.exists;
+  });
+  expect(mockRespsonse._getJSON().deleted).toBe.equalTo(true);
+  expect(docExists).toBe.equalTo(false);
+}
+
 export async function runCreateTest(db: firestore.Firestore) {
   let mockRequest = new MockExpressRequest(
     {
@@ -52,26 +74,4 @@ export async function runGetTest(db: firestore.Firestore) {
     });
   expect(orgUserResp.name).is.defined();
   expect(orgUserResp.email).toBe.equalTo("jaggerbrulato@gmail.com");
-}
-
-export async function runDeleteTest(db: firestore.Firestore) {
-
-  let mockRequest = new MockExpressRequest(
-    {
-      method: 'POST',
-      url: '/deleteUser/',
-      body: {
-        email: "jaggerbrulato@gmail.com",
-        isOrgUser: true
-      }
-    }
-  );
-  let mockRespsonse = new MockExpressResponse();
-  await userHandler.deleteUser(db, mockRequest, mockRespsonse);
-  let docExists;
-  await db.collection('orgUsers').doc(mockRequest.body.email).get().then(doc => {
-    docExists = doc.exists;
-  });
-  expect(mockRespsonse._getJSON().deleted).toBe.equalTo(true);
-  expect(docExists).toBe.equalTo(false);
 }
