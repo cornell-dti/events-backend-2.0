@@ -24,8 +24,10 @@ let db = admin.firestore();
 // -----------------------------------------------------------------------------
 
 function main() {
+  app.use(express.json())
   app.post('/createUser/', (req: Request, res: Response) => userHandler.createUser(db, req, res))
   app.get('/getUser/', (req: Request, res: Response) => userHandler.getUser(db, req, res))
+  app.delete('/deleteUser/', (req: Request, res: Response) => userHandler.deleteUser(db, req, res))
 
   app.listen(port, () => console.log(`Backend running on http://localhost:${port}`))
 }

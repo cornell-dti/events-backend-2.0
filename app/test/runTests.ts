@@ -36,12 +36,12 @@ let testsOver = false;
 
 let currentlyRunningTest: Function;
 
+// Constants -------------------------------------------------------------------
+let pageWidth = 150;
+
+
 async function start() {
   await runTest();
-}
-
-function printLine() {
-  console.log("-----------------------------------------------------------------------------------------------------");
 }
 
 const varToString = (varObj: any) => Object.keys(varObj)[0];
@@ -82,8 +82,12 @@ function endTests() {
   console.log("\n\n");
 }
 
+let maxValPrintLen = 25;
+
 export function triggerReturn(exp: testExtensions.Expectation) {
-  restrainedLog("| -- Expect " + exp.expectVal + " " + exp.operator.constructor.name + " " + exp.functionName + (!isUndefined(exp.actualVal) ? " " + exp.actualVal : "") + chalk.magenta(" passed!"));
+  let expStr = (exp.expectVal.toString().length > maxValPrintLen ? exp.expectVal.toString().slice(0, 15) + "..." : exp.expectVal.toString());
+  let actStr = (!isUndefined(exp.actualVal) ? " " + (exp.actualVal.toString().length > maxValPrintLen ? exp.actualVal.toString().slice(0, 15) + "..." : exp.actualVal.toString()) : "")
+  restrainedLog("| -- Expect " + expStr + " " + exp.operator.constructor.name + " " + exp.functionName + actStr + chalk.magenta(" passed!"));
   restrainedLog("| ---- " + chalk.yellow("Status") + ": " + (exp.passed ? FgGreen + "PASSED" + FgWhite : FgRed + "FAILED" + FgWhite));
   if (!exp.passed) {
     restrainedLog("| -------- FAILED: Expected " + exp.expectVal + " " + exp.operator.constructor.name + " " + exp.functionName + " " + exp.actualVal + "!");
@@ -98,10 +102,19 @@ if (typeof require !== 'undefined' && require.main === module) {
   start();
 }
 
+
+function printLine() {
+  let line = "";
+  for (let i = 0; i <= pageWidth; i++) {
+    line = line + "-";
+  }
+  console.log(line);
+}
+
 function restrainedLog(s: string, args?: string[]) {
   let totalColRef = (s.length - s.replace(new RegExp('[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]', 'g'), "").length) / 10;
-  if (s.length > 100 + totalColRef) {
-    let cut = s.slice(0, 100 + totalColRef);
+  if (s.length > pageWidth + (10 * totalColRef)) {
+    let cut = s.slice(0, pageWidth + (10 * totalColRef));
     if (isUndefined(args)) {
       console.log(cut + "|");
     } else {
@@ -110,7 +123,7 @@ function restrainedLog(s: string, args?: string[]) {
   }
   else {
     let padding = "";
-    let padAmt = (100 - s.length) + (10 * totalColRef);
+    let padAmt = (pageWidth - s.length) + (10 * totalColRef);
     for (let i = 0; i < padAmt; i++) {
       padding = padding + " ";
     }
