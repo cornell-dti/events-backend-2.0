@@ -40,6 +40,8 @@ let currentlyRunningTest: Function;
 
 // Constants -------------------------------------------------------------------
 let pageWidth = 150;
+let firstLine = true;
+let lastLine = false;
 
 
 let getMethods = (obj: any) => Object.getOwnPropertyNames(obj).filter(item => typeof obj[item] === 'function' && obj[item].name.toString().toLowerCase().includes("test")).map(item => obj[item] as Function);
@@ -86,6 +88,7 @@ function nextTest() {
 }
 
 function endTests() {
+  lastLine = true;
   printLine();
   console.log("\n\nALL TESTS COMPLETED");
   console.log("\n -- Tests " + FgGreen + "passed" + FgWhite + ": " + passedTests.length);
@@ -113,11 +116,27 @@ if (typeof require !== 'undefined' && require.main === module) {
   start();
 }
 
-
 function printLine() {
   let line = "";
-  for (let i = 0; i <= pageWidth; i++) {
-    line = line + "-";
+  if (firstLine) {
+    firstLine = false;
+    line += "┌";
+    for (let i = 0; i <= pageWidth - 2; i++) {
+      line = line + "-";
+    }
+    line += "┐";
+  } else if (lastLine) {
+    line += "└";
+    for (let i = 0; i <= pageWidth - 2; i++) {
+      line = line + "-";
+    }
+    line += "┘";
+  } else {
+    line += "├";
+    for (let i = 0; i <= pageWidth - 2; i++) {
+      line = line + "-";
+    }
+    line += "┤";
   }
   console.log(line);
 }
