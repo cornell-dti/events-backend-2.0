@@ -1,7 +1,7 @@
-import * as userHandlerTest from './tests/userHandlerTest';
 import * as testExtensions from './testExtensions';
 import { isUndefined } from 'util';
 const chalk = require('chalk');
+var fs = require('fs');
 
 // Firebase --------------------------------------------------------------------
 let admin = require('firebase-admin');
@@ -25,7 +25,9 @@ let colors = [FgRed, FgGreen, FgWhite, FgYellow, FgMagenta, FgCyan];
 
 // -----------------------------------------------------------------------------
 
-let testClasses = [userHandlerTest];
+let testClasses: any[] = [];
+let testClassTests: Function[][] = [];
+let testClassNames: string[] = [];
 let classIndex = 0;
 let testIndex = 0;
 
@@ -40,7 +42,16 @@ let currentlyRunningTest: Function;
 let pageWidth = 150;
 
 
+let getMethods = (obj: any) => Object.getOwnPropertyNames(obj).filter(item => typeof obj[item] === 'function').map(item => obj[item] as Function);
+
 async function start() {
+  let files = fs.readdirSync(__dirname + '/tests/');
+  for (let i = 0; i < files.length; i++) {
+    testClasses.push(require('./tests/' + files[i].replace(".js", "")));
+    let methods = getMethods(testClasses[i]);
+    testClassTests.push(methods);
+    testClassNames.push(files[i]);
+  }
   await runTest();
 }
 
@@ -48,9 +59,9 @@ const varToString = (varObj: any) => Object.keys(varObj)[0];
 
 async function runTest() {
   printLine();
-  currentlyRunningTest = testClasses[classIndex].tests[testIndex];
+  currentlyRunningTest = testClassTests[classIndex][testIndex];
   restrainedLog("|");
-  restrainedLog("| " + chalk.cyan("Module") + ": " + chalk.yellow(testClasses[classIndex].getScriptName()));
+  restrainedLog("| " + chalk.cyan("Module") + ": " + chalk.yellow(testClassNames[classIndex]));
   restrainedLog("| " + chalk.cyan("Running test") + ": " + chalk.magenta(currentlyRunningTest.name));
   restrainedLog("| ");
   await currentlyRunningTest.apply(null, [db]);
@@ -62,7 +73,7 @@ async function runTest() {
 
 function nextTest() {
   let testClass = testClasses[classIndex];
-  if (testIndex == testClass.tests.length - 1) {
+  if (testIndex == testClassTests[classIndex].length - 1) {
     if (classIndex == testClasses.length - 1) {
       endTests();
       testsOver = true;

@@ -1,24 +1,14 @@
 import * as userHandler from '../../userHandler';
 import { firestore } from 'firebase';
 import { expect } from '../testExtensions';
+import * as runTests from '../runTests';
 var MockExpressRequest = require('mock-express-request');
 var MockExpressResponse = require('mock-express-response');
-
-// Required Test Values --------------------------------------------------------
-
-export function getScriptName() {
-  var path = require('path');
-  var scriptName = path.basename(__filename);
-  return scriptName;
-};
-
-// The tests to be run, in order.
-export let tests: Function[] = [runDeleteTest, runCreateTest, runGetTest];
 
 
 // Begin Tests -----------------------------------------------------------------
 
-async function runCreateTest(db: firestore.Firestore) {
+export async function runCreateTest(db: firestore.Firestore) {
   let mockRequest = new MockExpressRequest(
     {
       method: 'POST',
@@ -45,7 +35,7 @@ async function runCreateTest(db: firestore.Firestore) {
   expect(orgUserResp.email).toBe.equalTo("jaggerbrulato@gmail.com");
 }
 
-async function runGetTest(db: firestore.Firestore) {
+export async function runGetTest(db: firestore.Firestore) {
   let mockRequest = new MockExpressRequest(
     {
       method: 'GET',
@@ -71,7 +61,7 @@ async function runGetTest(db: firestore.Firestore) {
   expect(orgUserResp.email).toBe.equalTo("jaggerbrulato@gmail.com");
 }
 
-async function runDeleteTest(db: firestore.Firestore) {
+export async function runDeleteTest(db: firestore.Firestore) {
 
   let mockRequest = new MockExpressRequest(
     {
