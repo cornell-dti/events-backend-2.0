@@ -65,11 +65,11 @@ const varToString = (varObj: any) => Object.keys(varObj)[0];
 async function runTest() {
   printLine();
   currentlyRunningTest = testClassTests[classIndex][testIndex];
-  restrainedLog("|");
-  restrainedLog("|");
-  restrainedLog("| " + chalk.cyan("Module") + ": " + chalk.yellow(testClassNames[classIndex]));
-  restrainedLog("| " + chalk.cyan("Running test") + ": " + chalk.magenta(currentlyRunningTest.name));
-  restrainedLog("|");
+  restrainedLog("│");
+  restrainedLog("│");
+  restrainedLog("│ " + chalk.cyan("Module") + ": " + chalk.yellow(testClassNames[classIndex]));
+  restrainedLog("│ " + chalk.cyan("Running test") + ": " + chalk.magenta(currentlyRunningTest.name));
+  restrainedLog("│");
   await currentlyRunningTest.apply(null, [db]);
   nextTest();
   if (!testsOver) {
@@ -95,8 +95,8 @@ function endTests() {
   lastLine = true;
   printLine();
   console.log("\n\nALL TESTS COMPLETED");
-  console.log("\n -- Tests " + FgGreen + "passed" + FgWhite + ": " + passedTests.length);
-  console.log("\n -- Tests " + FgRed + "failed" + FgWhite + ": " + failedTests.length);
+  console.log("\n ── Tests " + FgGreen + "passed" + FgWhite + ": " + passedTests.length);
+  console.log("\n ── Tests " + FgRed + "failed" + FgWhite + ": " + failedTests.length);
   console.log("\n\n");
 }
 
@@ -110,15 +110,15 @@ export function triggerReturn(exp: testExtensions.Expectation) {
     expStr = (exp.expectVal.toString().length > maxValPrintLen ? exp.expectVal.toString().slice(0, 15) + "..." : exp.expectVal.toString());
   }
   let actStr = (!isUndefined(exp.actualVal) ? " " + (exp.actualVal.toString().length > maxValPrintLen ? exp.actualVal.toString().slice(0, 15) + "..." : exp.actualVal.toString()) : "")
-  restrainedLog("| ┌- Expect " + expStr + " " + exp.operator.constructor.name + " " + exp.functionName + actStr + " " + (exp.passed ? chalk.magenta("passed!") : chalk.red("failed!")));
-  restrainedLog("| " + (exp.passed ? "└" : "├") + "--- " + chalk.yellow("Status") + ": " + (exp.passed ? chalk.green("PASSED") : chalk.red("FAILED")));
+  restrainedLog("│ ┌─ Expect " + expStr + " " + exp.operator.constructor.name + " " + exp.functionName + actStr + " " + (exp.passed ? chalk.magenta("passed!") : chalk.red("failed!")));
+  restrainedLog("│ " + "└" + (exp.passed ? "─── " : "─┬─ ") + chalk.yellow("Status") + ": " + (exp.passed ? chalk.green("PASSED") : chalk.red("FAILED")));
   if (!exp.passed) {
-    restrainedLog("| └------- " + chalk.red("FAILED") + ": Expected " + expStr + " " + exp.operator.constructor.name + " " + exp.functionName + actStr + "!");
+    restrainedLog("│   └─── " + chalk.red("FAILED") + ": Expected " + expStr + " " + exp.operator.constructor.name + " " + exp.functionName + actStr + "!");
     failedTests.push(currentlyRunningTest);
   } else {
     passedTests.push(currentlyRunningTest);
   }
-  restrainedLog("|");
+  restrainedLog("│");
 }
 
 if (typeof require !== 'undefined' && require.main === module) {
@@ -131,21 +131,21 @@ function printLine() {
     firstLine = false;
     line += "┌";
     for (let i = 0; i <= pageWidth - 2; i++) {
-      line = line + "-";
+      line = line + "─";
     }
     line += "┐";
   } else if (lastLine) {
-    restrainedLog("|");
+    restrainedLog("│");
     line += "└";
     for (let i = 0; i <= pageWidth - 2; i++) {
-      line = line + "-";
+      line = line + "─";
     }
     line += "┘";
   } else {
-    restrainedLog("|");
+    restrainedLog("│");
     line += "├";
     for (let i = 0; i <= pageWidth - 2; i++) {
-      line = line + "-";
+      line = line + "─";
     }
     line += "┤";
   }
@@ -157,9 +157,9 @@ function restrainedLog(s: string, args?: string[]) {
   if (s.length > pageWidth + (10 * totalColRef)) {
     let cut = s.slice(0, pageWidth + (10 * totalColRef));
     if (isUndefined(args)) {
-      console.log(cut + "|");
+      console.log(cut + "│");
     } else {
-      console.log(cut + "|", ...args);
+      console.log(cut + "│", ...args);
     }
   }
   else {
@@ -169,9 +169,9 @@ function restrainedLog(s: string, args?: string[]) {
       padding = padding + " ";
     }
     if (isUndefined(args)) {
-      console.log(s + padding + "|");
+      console.log(s + padding + "│");
     } else {
-      console.log(s + padding + "|", ...args);
+      console.log(s + padding + "│", ...args);
     }
   }
 }
