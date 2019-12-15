@@ -6,8 +6,9 @@ import { Express } from "express";
 // import * as handler from "./handler";
 import * as userHandler from "./userHandler";
 import { firestore } from "firebase";
-import { QuerySnapshot } from "@google-cloud/firestore";
 import { User } from "./types";
+const jwt = require('jsonwebtoken');
+const NodeRSA = require('node-rsa');
 
 // Express ---------------------------------------------------------------------
 const express = require('express');
@@ -29,23 +30,29 @@ let auth = admin.auth();
 // -----------------------------------------------------------------------------
 
 
-const authenticate = (req: Request, res: Response, next: NextFunction) => {
+const authenticate = async (req: Request, res: Response, next: NextFunction) => {
   if (!req.headers.authorization) {
     res.status(403).json({ error: "No auth header." });
   } else {
     let parsed: string[] = req.headers.authorization.split(' ');
     let token: string = parsed.length == 2 ? parsed[1] : "";
-    db.collection('users').where('token', '==', token).get()
-    .then((snapshot: QuerySnapshot) => {
-      if(snapshot.size != 1){
-        res.status(400).json({ error: "Error finding user." });
-      } else {
-        req.body.user = snapshot.docs[0].data() as User;
-        next();
+    let publicKey = new NodeRSA().importKey(serviceAccount.private_key, "pkcs8-private-pem").exportKey("pkcs8-public-pem");
+    jwt.verify(token, publicKey, (error: Error, decoded_token: any ) => {
+      if(error != null) {
+        res.status(400).json
       }
-    })
-    .catch((err: Error) => {
-      res.status(400).json({ error: "Error querying database." });
+      db.collection('users').doc(decoded_token.uid).get()
+      .then((doc: firestore.QueryDocumentSnapshot) => {
+        if(!doc.exists){
+          res.status(400).json({ error: "Error finding user." });
+        } else {
+          req.body.user = doc.data() as User;
+          next();
+        }
+      })
+      .catch((err: Error) => {
+        res.status(400).json({ error: "Error querying database." });
+      });
     });
   }
 };

@@ -8,7 +8,7 @@ import { EventRequest, CreateUserRequest, GetUserRequest, DeleteUserRequest } fr
 import * as commonOps from "./util/commonOps";
 import { v4 as uuid } from 'uuid';
 import { materialize } from "./util/commonOps";
-let bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt');
 
 export async function createUser(db: firestore.Firestore, req: Request, res: Response, auth: auth.Auth) {
   let request = req.body as CreateUserRequest;
@@ -59,5 +59,4 @@ export async function deleteUser(db: firestore.Firestore, req: Request, res: Res
   let user: User = req.body.user;
   let userDocRef = db.collection('users').doc(`${user.email}`);
   await userDocRef.delete();
-  res.status(200).json({ deleted: true });
-}
+  res.status(200).json({ deleted: true });}
