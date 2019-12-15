@@ -1,87 +1,63 @@
 // This file contains the firebase implementations of the endpoints.
 
-
 import { Request, Response } from "express-serve-static-core";
-import { firestore } from "firebase";
-import { Event, Org, OrgUser, StudentUser } from "./types"
+import { auth } from "firebase-admin";
+import { firestore, auth as Auth } from "firebase";
+import { Event, Org, OrgUser, StudentUser, User } from "./types"
 import { EventRequest, CreateUserRequest, GetUserRequest, DeleteUserRequest } from "./requestTypes";
 import * as commonOps from "./util/commonOps";
 import { v4 as uuid } from 'uuid';
 import { materialize } from "./util/commonOps";
+let bcrypt = require('bcrypt');
 
-export async function createUser(db: firestore.Firestore, req: Request, res: Response) {
+export async function createUser(db: firestore.Firestore, req: Request, res: Response, auth: auth.Auth) {
   let request = req.body as CreateUserRequest;
-  if (request.isOrgUser) {
-    let orgUser: OrgUser = {
-      name: request.name,
-      uuid: uuid(),
-      email: request.email.toLowerCase()
-    }
-    let orgUserRef: firestore.DocumentReference = db.collection('orgUsers').doc(`${orgUser.email}`)
-    await orgUserRef.get().then(
-      async doc => {
-        let orgUserDoc = doc;
-        if (orgUserDoc.exists) {
-          res.status(400).json({ error: "OrgUser already exists!" });
-        } else {
-          await orgUserRef.set(orgUser);
-          res.status(200).json(orgUser);
-        }
-      }
-    );
-  } else {
-    let studentUser: StudentUser = {
-      name: request.name,
-      uuid: uuid(),
-      email: request.email.toLowerCase()
-    }
-    let studentUserRef: firestore.DocumentReference = db.collection('studentUsers').doc(`${studentUser.email}`)
-    await studentUserRef.get().then(
-      async doc => {
-        let studentUserDoc = doc;
-        if (studentUserDoc.exists) {
-          res.status(400).json({ error: "StudentUser already exists!" });
-        } else {
-          await studentUserRef.set(studentUser);
-          res.status(200).json(studentUser);
-        }
-      }
-    );
+  if (request.password !== request.confirm_password) {
+    res.status(400).json({ error: "Passwords do not match."})
   }
+  let userRef: firestore.DocumentReference = db.collection('users').doc(`${request.email}`)
+  await userRef.get().then(
+    async doc => {
+      let userDoc = doc;
+      if (userDoc.exists) {
+        res.status(400).json({ error: "User already exists!" });
+      } else {
+        let user: User = {
+          name: request.name,
+          uuid: uuid(),
+          email: request.email.toLowerCase(),
+          hash: bcrypt.hashSync(request.password, 10),
+          token: await auth.createCustomToken(request.email.toLowerCase()),
+          isOrgUser: request.isOrgUser
+        }
+        await userRef.set(user);
+        res.status(200).json({ token: user.token });
+      }
+    }
+  );
 }
 
 export async function getUser(db: firestore.Firestore, req: Request, res: Response) {
   let request = req.body as GetUserRequest;
-  if (request.isOrgUser) {
-    let orgUserDocRef = db.collection('orgUsers').doc(`${request.email.toLowerCase()}`);
-    await orgUserDocRef.get().then(async doc => {
-      if (doc.exists) {
-        res.status(200).json(await materialize(doc.data()));
+  let userDocRef = db.collection('users').doc(`${request.email.toLowerCase()}`);
+  await userDocRef.get().then(async doc => {
+    if (doc.exists) {
+      let data = await materialize(doc.data());
+      let user = data as User;
+      if (bcrypt.compareSync(request.password, user.hash)) {
+        res.status(200).json({ token: user.token });
       } else {
-        res.status(404).json({ error: "OrgUser with email: " + `${request.email.toLowerCase()}` + " not found!" });
+        res.status(400).json({ error: "Incorrect password." });
       }
-    });
-  } else {
-    let studentUserDocRef = db.collection('studentUsers').doc(`${request.email.toLowerCase()}`);
-    await studentUserDocRef.get().then(async doc => {
-      if (doc.exists) {
-        res.status(200).json(await materialize(doc.data()));
-      } else {
-        res.status(404).json({ error: "StudentUser with email: " + `${request.email.toLowerCase()}` + " not found!" });
-      }
-    });
-  }
+    } else {
+      res.status(404).json({ error:  `User with email: ${request.email.toLowerCase()} not found!` });
+    }
+  });
 }
 
 export async function deleteUser(db: firestore.Firestore, req: Request, res: Response) {
-  let request = req.body as DeleteUserRequest;
-  if (request.isOrgUser) {
-    let orgUserDocRef = db.collection('orgUsers').doc(`${request.email.toLowerCase()}`);
-    await orgUserDocRef.delete();
-    res.status(200).json({ deleted: true });
-  } else {
-    let studentUserDocRef = db.collection('studentUsers').doc(`${request.email.toLowerCase()}`);
-    await studentUserDocRef.delete();
-    res.status(200).json({ deleted: true });
-  }
+  let user: User = req.body.user;
+  let userDocRef = db.collection('users').doc(`${user.email}`);
+  await userDocRef.delete();
+  res.status(200).json({ deleted: true });
 }

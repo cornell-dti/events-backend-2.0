@@ -43,14 +43,19 @@ export type Media = {
   uploader: firestore.DocumentReference;
 }
 
-export type OrgUser = {
+export type User = {
   uuid: string;
   name: string;
   email: string;
+  hash: string;
+  token: string;
+  isOrgUser: boolean;
 }
 
-export type StudentUser = {
-  uuid: string;
-  name: string;
-  email: string;
+export type OrgUser = User & {
+  //add specific org user info here
+}
+
+export type StudentUser = User & {
+  //add specific student user info here
 }

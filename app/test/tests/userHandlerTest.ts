@@ -1,4 +1,5 @@
 import * as userHandler from '../../userHandler';
+import { auth } from 'firebase-admin';
 import { firestore } from 'firebase';
 import { expect } from '../testExtensions';
 import * as runTests from '../runTests';
@@ -30,7 +31,7 @@ export async function runDeleteTest(db: firestore.Firestore) {
   expect(docExists).toBe.equalTo(false);
 }
 
-export async function runCreateTest(db: firestore.Firestore) {
+export async function runCreateTest(db: firestore.Firestore, auth: auth.Auth) {
   let mockRequest = new MockExpressRequest(
     {
       method: 'POST',
@@ -43,7 +44,7 @@ export async function runCreateTest(db: firestore.Firestore) {
     }
   );
   let mockRespsonse = new MockExpressResponse();
-  await userHandler.createUser(db, mockRequest, mockRespsonse);
+  await userHandler.createUser(db, mockRequest, mockRespsonse, auth);
   let orgUserResp: any;
   await db.collection('orgUsers').doc("jaggerbrulato@gmail.com").get()
     .then(doc => {
