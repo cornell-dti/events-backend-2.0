@@ -52,6 +52,7 @@ export async function createUser(db: firestore.Firestore, req: Request, res: Res
 
 export async function getUser(db: firestore.Firestore, req: Request, res: Response) {
   let request = req.body as GetUserRequest;
+  res.json({ "marker": 1 });
   if (request.isOrgUser) {
     let orgUserDocRef = db.collection('orgUsers').doc(`${request.email.toLowerCase()}`);
     await orgUserDocRef.get().then(async doc => {
