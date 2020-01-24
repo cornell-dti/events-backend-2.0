@@ -8,7 +8,7 @@ const dotenv = require('dotenv').config();
 import { Request, Response } from "express-serve-static-core";
 import { Express } from "express";
 // import * as handler from "./handler";
-import * as userHandler from "./userHandler";
+import * as userHandler from "./handlers/userHandler";
 
 // Express ---------------------------------------------------------------------
 const express = require('express');

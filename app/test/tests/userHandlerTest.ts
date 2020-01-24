@@ -1,4 +1,4 @@
-import * as userHandler from '../../userHandler';
+import * as userHandler from '../../handlers/userHandler';
 import { firestore } from 'firebase';
 import { expect } from '../testExtensions';
 import * as runTests from '../runTests';
