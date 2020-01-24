@@ -49,6 +49,7 @@ function shell(thisArg: any, f: Function, req: Request, res: Response, args?: an
     req.socket.remoteAddress ||
     ((req.connection as any)['socket'] ? (req.connection as any)['socket'].remoteAddress : null);
   console.log("  ├─── BY: " + ip);
+  console.log("  ├─── AT: " + new Date().toString());
   console.log("  └─── CALLED: " + f.name);
   f.apply(thisArg, args);
 }
