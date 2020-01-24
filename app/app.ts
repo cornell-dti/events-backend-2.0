@@ -30,13 +30,14 @@ function updateServiceAccountWithSecrets() {
     console.log("ERROR: No PK_PWD in .env, pk_pwd val is: " + serviceAccount["private_key"]);
     throw new Error("No PK_PWD in .env");
   }
+
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://eventsbackenddatabase.firebaseio.com"
+  });
 }
 updateServiceAccountWithSecrets();
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://eventsbackenddatabase.firebaseio.com"
-});
 let db = admin.firestore();
 // -----------------------------------------------------------------------------
 
