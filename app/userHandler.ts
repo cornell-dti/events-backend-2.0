@@ -52,12 +52,13 @@ export async function createUser(db: firestore.Firestore, req: Request, res: Res
 
 export async function getUser(db: firestore.Firestore, req: Request, res: Response) {
   let request = req.body as GetUserRequest;
-  res.json({ "marker": 1 });
+  // res.json({ "marker": 1 });
   if (request.isOrgUser) {
     let orgUserDocRef = db.collection('orgUsers').doc(`${request.email.toLowerCase()}`);
     await orgUserDocRef.get().then(async doc => {
       if (doc.exists) {
-        res.status(200).json(await materialize(doc.data()));
+        let userDataMat = await materialize(doc.data());
+        res.status(200).json(userDataMat);
       } else {
         res.status(404).json({ error: "OrgUser with email: " + `${request.email.toLowerCase()}` + " not found!" });
       }
