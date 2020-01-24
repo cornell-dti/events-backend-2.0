@@ -9,6 +9,7 @@ import { Request, Response } from "express-serve-static-core";
 import { Express } from "express";
 // import * as handler from "./handler";
 import * as userHandler from "./handlers/userHandler";
+import fs from 'fs';
 
 // Express ---------------------------------------------------------------------
 const express = require('express');
@@ -48,13 +49,26 @@ function shell(thisArg: any, f: Function, req: Request, res: Response, args?: an
     req.socket.remoteAddress ||
     ((req.connection as any)['socket'] ? (req.connection as any)['socket'].remoteAddress : null);
   console.log("  ├─── BY: " + ip);
+  console.log("  ├─── AT: " + new Date().toString());
   console.log("  └─── CALLED: " + f.name);
   f.apply(thisArg, args);
 }
 
+let getLogs = (dbv: any, reqv: Request, resv: Response) => {
+  fs.readFile('logs.txt', { encoding: null, flag: undefined }, (err: any, data: Buffer) => {
+    if (err) {
+      console.log("\nUnable to retrieve logs!");
+      resv.send("Unable to retrieve logs!");
+    } else {
+      resv.send(data);
+    }
+  });
+};
+
 function main() {
   app.use(express.json());
   app.get('/', (req: Request, res: Response) => shell(undefined, (dbv: any, reqv: Request, resv: Response) => { resv.json({ "test": "up!" }) }, req, res, [db, req, res]));
+  app.get('/logs/', (req: Request, res: Response) => shell(undefined, getLogs, req, res, [db, req, res]));
   app.post('/createUser/', (req: Request, res: Response) => shell(userHandler, userHandler.createUser, req, res, [db, req, res]));
   app.get('/getUser/', (req: Request, res: Response) => shell(userHandler, userHandler.getUser, req, res, [db, req, res]));
   app.delete('/deleteUser/', (req: Request, res: Response) => shell(userHandler, userHandler.deleteUser, req, res, [db, req, res]));

@@ -1,0 +1,21 @@
+Backend running on http://localhost:8080
+
+REQUEST TO: /logs/
+  ├─── BY: ::1
+  └─── CALLED: getLogs
+
+REQUEST TO: /logs/
+  ├─── BY: ::1
+  └─── CALLED: getLogs
+
+REQUEST TO: /logs/
+  ├─── BY: ::1
+  └─── CALLED: getLogs
+
+REQUEST TO: /getUser/
+  ├─── BY: ::1
+  └─── CALLED: getUser
+
+REQUEST TO: /logs/
+  ├─── BY: ::1
+  └─── CALLED: getLogs
