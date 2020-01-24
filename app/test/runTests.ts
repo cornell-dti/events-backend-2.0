@@ -3,6 +3,10 @@ import { isUndefined } from 'util';
 const chalk = require('chalk');
 var fs = require('fs');
 
+// Read .env file --------------------------------------------------------------
+const dotenv = require('dotenv').config();
+// -----------------------------------------------------------------------------
+
 // Firebase --------------------------------------------------------------------
 let admin = require('firebase-admin');
 let serviceAccount = require('../../secrets/eventsbackenddatabase-firebase-adminsdk-ukak2-d1b3a5ef55.json');
