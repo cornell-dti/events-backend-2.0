@@ -40,11 +40,22 @@ admin.initializeApp({
 let db = admin.firestore();
 // -----------------------------------------------------------------------------
 
+function shell(thisArg: any, f: Function, req: Request, res: Response, args?: any[]) {
+  console.log("\nREQUEST TO: " + req.url);
+  var ip = req.headers['x-forwarded-for'] ||
+    req.connection.remoteAddress ||
+    req.socket.remoteAddress ||
+    ((req.connection as any)['socket'] ? (req.connection as any)['socket'].remoteAddress : null);
+  console.log("  ├─── BY: " + ip);
+  console.log("  └─── CALLED: " + f.name);
+  f.apply(thisArg, args);
+}
+
 function main() {
-  app.use(express.json())
-  app.post('/createUser/', (req: Request, res: Response) => userHandler.createUser(db, req, res))
-  app.get('/getUser/', (req: Request, res: Response) => userHandler.getUser(db, req, res))
-  app.delete('/deleteUser/', (req: Request, res: Response) => userHandler.deleteUser(db, req, res))
+  app.use(express.json());
+  app.post('/createUser/', (req: Request, res: Response) => shell(userHandler, userHandler.createUser, req, res, [db, req, res]));
+  app.get('/getUser/', (req: Request, res: Response) => shell(userHandler, userHandler.getUser, req, res, [db, req, res]));
+  app.delete('/deleteUser/', (req: Request, res: Response) => shell(userHandler, userHandler.deleteUser, req, res, [db, req, res]));
 
   app.listen(port, () => console.log(`Backend running on http://localhost:${port}`))
 }
