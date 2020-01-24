@@ -1,1 +1,1 @@
-web: npm start > output.txt
+web: npm start
