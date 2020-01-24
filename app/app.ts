@@ -48,7 +48,7 @@ async function shell(thisArg: any, f: Function, req: Request, res: Response, arg
     ((req.connection as any)['socket'] ? (req.connection as any)['socket'].remoteAddress : null);
   console.log("  ├─── BY: " + ip);
   console.log("  └─── CALLED: " + f.name);
-  f.apply(thisArg, args);
+  await f.apply(thisArg, args);
 }
 
 function main() {
