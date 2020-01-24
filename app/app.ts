@@ -40,7 +40,7 @@ admin.initializeApp({
 let db = admin.firestore();
 // -----------------------------------------------------------------------------
 
-function shell(thisArg: any, f: Function, req: Request, res: Response, args?: any[]) {
+async function shell(thisArg: any, f: Function, req: Request, res: Response, args?: any[]) {
   console.log("\nREQUEST TO: " + req.url);
   var ip = req.headers['x-forwarded-for'] ||
     req.connection.remoteAddress ||
