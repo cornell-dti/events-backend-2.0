@@ -54,7 +54,7 @@ export async function getUser(db: firestore.Firestore, req: Request, res: Respon
   let request = req.body as GetUserRequest;
   if (request.isOrgUser) {
     let orgUserDocRef = db.collection('orgUsers').doc(`${request.email.toLowerCase()}`);
-    orgUserDocRef.get().then(async doc => {
+    await orgUserDocRef.get().then(async doc => {
       res.status(200).json({ "marker": 3 });
       if (doc.exists) {
         let userDataMat = await materialize(doc.data());
@@ -62,7 +62,7 @@ export async function getUser(db: firestore.Firestore, req: Request, res: Respon
       } else {
         res.status(404).json({ error: "OrgUser with email: " + `${request.email.toLowerCase()}` + " not found!" });
       }
-    });
+    }, null);
   } else {
     let studentUserDocRef = db.collection('studentUsers').doc(`${request.email.toLowerCase()}`);
     await studentUserDocRef.get().then(async doc => {
