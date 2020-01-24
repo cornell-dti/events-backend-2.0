@@ -3,11 +3,11 @@
 
 import { Request, Response } from "express-serve-static-core";
 import { firestore } from "firebase";
-import { Event, Org, OrgUser, StudentUser } from "./types"
-import { EventRequest, CreateUserRequest, GetUserRequest, DeleteUserRequest } from "./requestTypes";
-import * as commonOps from "./util/commonOps";
+import { Event, Org, OrgUser, StudentUser } from "../types"
+import { EventRequest, CreateUserRequest, GetUserRequest, DeleteUserRequest } from "../requestTypes";
+import * as commonOps from "../util/commonOps";
 import { v4 as uuid } from 'uuid';
-import { materialize } from "./util/commonOps";
+import { materialize } from "../util/commonOps";
 
 export async function createUser(db: firestore.Firestore, req: Request, res: Response) {
   let request = req.body as CreateUserRequest;
