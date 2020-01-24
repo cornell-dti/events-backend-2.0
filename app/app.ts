@@ -2,9 +2,6 @@
 // handling methods in the handler.
 
 // Read .env file --------------------------------------------------------------
-let porttt = process.env.PORT || 8081;
-console.log(porttt +
-  "\n");
 const dotenv = require('dotenv').config();
 // -----------------------------------------------------------------------------
 

@@ -6,7 +6,7 @@
   "scripts": {
     "test": "npm run tsc && node build/test/runTests.js",
     "tsc": "tsc",
-    "start": "ts-node app/app.ts > output.txt"
+    "start": "ts-node app/app.ts"
   },
   "repository": {
     "type": "git",
