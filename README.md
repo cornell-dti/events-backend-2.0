@@ -1,5 +1,7 @@
 # EventsBackend
 
+
+
 ## How to install
 
 First, clone the repository.
@@ -7,6 +9,8 @@ First, clone the repository.
 Create a folder in the root of the project called <code>secrets</code>
 
 Get the private key credential json file from a TPM or PM, and place that file the <code>secrets</code> directory.
+
+Then, get the .env file for Eve from a TPM or PM, and place that on the same level as <code>.gitignore</code>.
 
 Run <code>npm install</code>
 
@@ -45,4 +49,5 @@ Then in order to run the testing script, simply call:
 
 Run <code>npm test</code>
 
-
+#### Contributors
+2019 - Jagger Brulato (architecture, test suite, Logger, DevOps)
