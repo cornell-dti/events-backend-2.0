@@ -56,6 +56,7 @@ function shell(thisArg: any, f: Function, req: Request, res: Response, args?: an
   console.log(tabStr + "├─── AT: " + new Date().toString());
   if (req.get('eve-pk') != process.env.EVE_PK) {
     console.log(tabStr + "├─── STATUS: REJECTED");
+    console.log(tabStr + (req.url.toLowerCase() != "/logs/" ? "├" : "└") + "─── CALLED: " + f.name);
     let eve_pk_json = { "error": "The header \"eve-pk\" was undefined or incorrect. To obtain the pk value, consult a TPM or dev lead." };
     res.status(401).json(eve_pk_json);
     return;
