@@ -25,7 +25,7 @@ This project uses a custom test suite. In order to add a test, simply add a .ts 
 
 Any functions exported from this .ts file that include the substring "test" (case-insensitive) in the function name will be registered as a test by the testing suite.
 
-The tests are run using expectation statements, which can be performed by including <code>require('../testExtensions')</code> in your test file and then writing expect functions in the form:
+The tests are run using expectation statements, which can be performed by including <code>import { expect } from '../testExtensions';</code> in your test file and then writing expect functions in the form:
 
 <code>expect(val1).verb.comparison(?val2)</code>
 
