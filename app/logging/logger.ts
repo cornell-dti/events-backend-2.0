@@ -106,7 +106,7 @@ export let responseBoxLog = (msg: string) => {
   console.log(msgBottom);
 };
 
-export let getLogs = (dbv: any, reqv: Request, resv: Response) => {
+export function getLogs(dbv: any, reqv: Request, resv: Response) {
   fs.readFile('logs.txt', { encoding: null, flag: undefined }, (err: any, data: Buffer) => {
     if (err) {
       console.log("\nUnable to retrieve logs!");
