@@ -42,7 +42,7 @@ export async function createUser(db: firestore.Firestore, req: Request, res: Res
         if (studentUserDoc.exists) {
           return { error: "StudentUser already exists!" };
         } else {
-          studentUserRef.set(studentUser).then(() => {
+          return studentUserRef.set(studentUser).then(() => {
             return (studentUser);
           });
         }
