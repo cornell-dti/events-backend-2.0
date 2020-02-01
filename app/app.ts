@@ -10,7 +10,6 @@ import { Express } from "express";
 import * as Logger from "./logging/logger";
 // import * as handler from "./handler";
 import * as userHandler from "./handlers/userHandler";
-import fs from 'fs';
 import uuid from "uuid";
 
 // Express ---------------------------------------------------------------------
@@ -66,21 +65,10 @@ function shell(thisArg: any, f: Function, req: Request, res: Response, args?: an
   }
 }
 
-let getLogs = (dbv: any, reqv: Request, resv: Response) => {
-  fs.readFile('logs.txt', { encoding: null, flag: undefined }, (err: any, data: Buffer) => {
-    if (err) {
-      console.log("\nUnable to retrieve logs!");
-      resv.send("Unable to retrieve logs!");
-    } else {
-      resv.send(data);
-    }
-  });
-};
-
 function main() {
   app.use(express.json());
   app.get('/', (req: Request, res: Response) => shell(undefined, (dbv: any, reqv: Request, resv: Response) => { resv.json({ "test": "up!" }) }, req, res, [db, req, res]));
-  app.get('/logs/', (req: Request, res: Response) => shell(undefined, getLogs, req, res, [db, req, res]));
+  app.get('/logs/', (req: Request, res: Response) => shell(Logger, Logger.getLogs, req, res, [db, req, res]));
   app.post('/createUser/', (req: Request, res: Response) => shell(userHandler, userHandler.createUser, req, res, [db, req, res]));
   app.get('/getUser/', (req: Request, res: Response) => shell(userHandler, userHandler.getUser, req, res, [db, req, res]));
   app.delete('/deleteUser/', (req: Request, res: Response) => shell(userHandler, userHandler.deleteUser, req, res, [db, req, res]));

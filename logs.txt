@@ -1,50 +1,23 @@
 Backend running on http://localhost:8080
+┌────────────────────┐
+│ REQUEST TO: /logs/ │
+└─┬──────────────────┘
+  ├─── BY: ::1
+  ├─── AT: Sat Feb 01 2020 14:37:16 GMT-0500 (Eastern Standard Time)
+  ├─── STATUS: ACCEPTED
+  └─── CALLED: 
 ┌───────────────────────┐
 │ REQUEST TO: /getUser/ │
 └─┬─────────────────────┘
   ├─── BY: ::1
-  ├─── AT: Sat Feb 01 2020 14:34:31 GMT-0500 (Eastern Standard Time)
+  ├─── AT: Sat Feb 01 2020 14:37:20 GMT-0500 (Eastern Standard Time)
   ├─── STATUS: ACCEPTED
   ├─── CALLED: getUser
 ┌─┴────────────────────────────────────────────────────────┐
 │ RESPONSE OF:                                             │
 │ {                                                        │
-│   "uuid": "be61c5ba-cd38-48e4-b3f6-9372efb2b0ee",        │
 │   "email": "jaggerbrulato@gmail.com",                    │
-│   "name": "Jagger"                                       │
+│   "name": "Jagger",                                      │
+│   "uuid": "c479b5ec-cbf4-4e32-9a21-9067b53ea8ce"         │
 │ }                                                        │
 └──────────────────────────────────────────────────────────┘
-┌────────────────────┐
-│ REQUEST TO: /logs/ │
-└─┬──────────────────┘
-  ├─── BY: ::1
-  ├─── AT: Sat Feb 01 2020 14:34:37 GMT-0500 (Eastern Standard Time)
-  ├─── STATUS: ACCEPTED
-  └─── CALLED: getLogs
-┌────────────────────┐
-│ REQUEST TO: /logs/ │
-└─┬──────────────────┘
-  ├─── BY: ::1
-  ├─── AT: Sat Feb 01 2020 14:34:39 GMT-0500 (Eastern Standard Time)
-  ├─── STATUS: ACCEPTED
-  └─── CALLED: getLogs
-┌──────────────────────────┐
-│ REQUEST TO: /createUser/ │
-└─┬────────────────────────┘
-  ├─── BY: ::1
-  ├─── AT: Sat Feb 01 2020 14:34:42 GMT-0500 (Eastern Standard Time)
-  ├─── STATUS: ACCEPTED
-  ├─── CALLED: createUser
-┌─┴────────────────────────────────────┐
-│ RESPONSE OF:                         │
-│ {                                    │
-│   "error": "OrgUser already exists!" │
-│ }                                    │
-└──────────────────────────────────────┘
-┌────────────────────┐
-│ REQUEST TO: /logs/ │
-└─┬──────────────────┘
-  ├─── BY: ::1
-  ├─── AT: Sat Feb 01 2020 14:34:45 GMT-0500 (Eastern Standard Time)
-  ├─── STATUS: ACCEPTED
-  └─── CALLED: getLogs
