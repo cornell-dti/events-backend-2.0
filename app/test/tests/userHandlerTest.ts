@@ -21,7 +21,8 @@ export async function runDeleteTest(db: firestore.Firestore) {
     }
   );
   let mockRespsonse = new MockExpressResponse();
-  await userHandler.deleteUser(db, mockRequest, mockRespsonse);
+  // Simulate the app's sending of handler output to resposne
+  mockRespsonse.json(await userHandler.deleteUser(db, mockRequest, mockRespsonse));
   let docExists;
   await db.collection('orgUsers').doc(mockRequest.body.email).get().then(doc => {
     docExists = doc.exists;
@@ -43,7 +44,8 @@ export async function runCreateTest(db: firestore.Firestore) {
     }
   );
   let mockRespsonse = new MockExpressResponse();
-  await userHandler.createUser(db, mockRequest, mockRespsonse);
+  // Simulate the app's sending of handler output to resposne
+  mockRespsonse.json(await userHandler.createUser(db, mockRequest, mockRespsonse));
   let orgUserResp: any;
   await db.collection('orgUsers').doc("jaggerbrulato@gmail.com").get()
     .then(doc => {
@@ -65,7 +67,8 @@ export async function runGetTest(db: firestore.Firestore) {
     }
   );
   let mockRespsonse = new MockExpressResponse();
-  await userHandler.getUser(db, mockRequest, mockRespsonse);
+  // Simulate the app's sending of handler output to resposne
+  mockRespsonse.json(await userHandler.getUser(db, mockRequest, mockRespsonse));
   let orgUserResp: any;
   await db.collection('orgUsers').doc("jaggerbrulato@gmail.com").get()
     .then(doc => {

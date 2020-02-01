@@ -1,59 +1,43 @@
 Backend running on http://localhost:8080
-┌────────────────────┐
-│ REQUEST TO: /logs/ │
-└─┬──────────────────┘
+┌──────────────────────────┐
+│ REQUEST TO: /deleteUser/ │
+└─┬────────────────────────┘
   ├─── BY: ::1
-  ├─── AT: Fri Jan 24 2020 21:15:30 GMT-0500 (Eastern Standard Time)
+  ├─── AT: Sat Feb 01 2020 13:41:10 GMT-0500 (Eastern Standard Time)
   ├─── STATUS: ACCEPTED
-  └─── CALLED: getLogs
-┌────────────────────┐
-│ REQUEST TO: /logs/ │
-└─┬──────────────────┘
-  ├─── BY: ::1
-  ├─── AT: Fri Jan 24 2020 21:15:34 GMT-0500 (Eastern Standard Time)
-  ├─── STATUS: REJECTED
-  └─── CALLED: getLogs
-┌────────────────────┐
-│ REQUEST TO: /logs/ │
-└─┬──────────────────┘
-  ├─── BY: ::1
-  ├─── AT: Fri Jan 24 2020 21:15:38 GMT-0500 (Eastern Standard Time)
-  ├─── STATUS: ACCEPTED
-  └─── CALLED: getLogs
+  ├─── CALLED: deleteUser
+┌─┴─────────────────┐
+│ RESPONSE OF:      │
+│ {                 │
+│   "deleted": true │
+│ }                 │
+└───────────────────┘
 ┌───────────────────────┐
 │ REQUEST TO: /getUser/ │
 └─┬─────────────────────┘
   ├─── BY: ::1
-  ├─── AT: Fri Jan 24 2020 21:15:50 GMT-0500 (Eastern Standard Time)
+  ├─── AT: Sat Feb 01 2020 13:41:19 GMT-0500 (Eastern Standard Time)
   ├─── STATUS: ACCEPTED
   ├─── CALLED: getUser
 ┌─┴────────────────────────────────────────────────────────┐
 │ RESPONSE OF:                                             │
 │ {                                                        │
-│   "uuid": "ae6ed0c7-c9b2-445d-8112-97af95c271ad",        │
-│   "email": "jaggerbrulato@gmail.com",                    │
-│   "name": "Jagger"                                       │
+│   "error": "OrgUser with email: jaggerbrulato@gmail.com  │
+│ not found!"                                              │
 │ }                                                        │
 └──────────────────────────────────────────────────────────┘
-┌───────────────────────┐
-│ REQUEST TO: /getUser/ │
-└─┬─────────────────────┘
+┌──────────────────────────┐
+│ REQUEST TO: /createUser/ │
+└─┬────────────────────────┘
   ├─── BY: ::1
-  ├─── AT: Fri Jan 24 2020 21:15:54 GMT-0500 (Eastern Standard Time)
-  ├─── STATUS: REJECTED
-  ├─── CALLED: getUser
+  ├─── AT: Sat Feb 01 2020 13:41:27 GMT-0500 (Eastern Standard Time)
+  ├─── STATUS: ACCEPTED
+  ├─── CALLED: createUser
 ┌─┴────────────────────────────────────────────────────────┐
 │ RESPONSE OF:                                             │
 │ {                                                        │
-│   "error": "The header \"eve-pk\" was undefined or incor │
-│ rect. To obtain the pk value, consult a TPM or dev lead. │
-│ "                                                        │
+│   "name": "Jagger",                                      │
+│   "uuid": "ff6de9ca-6041-4aec-afba-3ad80eee06ed",        │
+│   "email": "jaggerbrulato@gmail.com"                     │
 │ }                                                        │
 └──────────────────────────────────────────────────────────┘
-┌────────────────────┐
-│ REQUEST TO: /logs/ │
-└─┬──────────────────┘
-  ├─── BY: ::1
-  ├─── AT: Fri Jan 24 2020 21:15:57 GMT-0500 (Eastern Standard Time)
-  ├─── STATUS: ACCEPTED
-  └─── CALLED: getLogs
