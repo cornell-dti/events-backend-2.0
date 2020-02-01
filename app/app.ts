@@ -64,11 +64,13 @@ function shell(thisArg: any, f: Function, req: Request, res: Response, args?: an
     console.log(tabStr + "├─── STATUS: ACCEPTED");
     console.log(tabStr + (req.url.toLowerCase() != "/logs/" ? "├" : "└") + "─── CALLED: " + f.name);
     let promise: Promise<any> = f.apply(thisArg, args);
-    promise.then((val) => {
-      res.status(400).json(val);
-    }).catch((reason) => {
-      res.status(200).json({ "error": "Promise rejected for: " + reason });
-    })
+    if (req.url.toLowerCase() !== "/logs/") {
+      promise.then((val) => {
+        res.status(400).json(val);
+      }).catch((reason) => {
+        res.status(200).json({ "error": "Promise rejected for: " + reason });
+      });
+    }
   }
 }
 
