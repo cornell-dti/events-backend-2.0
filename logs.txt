@@ -1,15 +1,1 @@
 Backend running on http://localhost:8080
-┌────────────────────┐
-│ REQUEST TO: /logs/ │
-└─┬──────────────────┘
-  ├─── BY: ::1
-  ├─── AT: Sat Feb 01 2020 14:40:52 GMT-0500 (Eastern Standard Time)
-  ├─── STATUS: ACCEPTED
-  └─── CALLED: getLogs
-┌────────────────────┐
-│ REQUEST TO: /logs/ │
-└─┬──────────────────┘
-  ├─── BY: ::1
-  ├─── AT: Sat Feb 01 2020 14:40:53 GMT-0500 (Eastern Standard Time)
-  ├─── STATUS: ACCEPTED
-  └─── CALLED: getLogs
