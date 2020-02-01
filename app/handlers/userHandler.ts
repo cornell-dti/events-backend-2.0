@@ -57,9 +57,9 @@ export async function getUser(db: firestore.Firestore, req: Request, res: Respon
     let orgUserDocRef = db.collection('orgUsers').doc(`${request.email.toLowerCase()}`);
     return orgUserDocRef.get().then(async doc => {
       if (doc.exists) {
-        res.status(200).json(await materialize(doc.data()));
+        return await materialize(doc.data());
       } else {
-        res.status(404).json({ error: "OrgUser with email: " + `${request.email.toLowerCase()}` + " not found!" });
+        return { error: "OrgUser with email: " + `${request.email.toLowerCase()}` + " not found!" };
       }
     });
   } else {
