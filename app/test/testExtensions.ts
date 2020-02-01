@@ -3,9 +3,15 @@ import * as testRunner from './runTests';
 type Expect = {
   toBe: toBe;
   is: is;
+  description: string;
+}
+
+type Describe = {
+  expect: Function;
 }
 
 export type Expectation = {
+  description: string;
   expectVal: any;
   actualVal: any;
   operator: any;
@@ -13,16 +19,21 @@ export type Expectation = {
   passed: boolean;
 }
 
-export function expect(val: any): Expect {
-  return { toBe: new toBe(val), is: new is(val) } as Expect;
+export function describe(testDescription: string) {
+  let x = function expect(val: any): Expect {
+    return { toBe: new toBe(testDescription, val), is: new is(testDescription, val) } as Expect;
+  }
+  return { expect: x };
 }
 
 class is {
 
   private expectVal: any;
   private opInstance: is;
+  private desc: string;
 
-  public constructor(exp: any) {
+  public constructor(desc: string, exp: any) {
+    this.desc = desc;
     this.expectVal = exp;
     this.opInstance = this;
   }
@@ -34,7 +45,8 @@ class is {
       actualVal: undefined,
       operator: this.opInstance,
       functionName: "null",
-      passed: (this.expectVal == null)
+      passed: (this.expectVal == null),
+      description: this.desc
     };
     testRunner.triggerReturn(triggerResponse);
   }
@@ -46,7 +58,8 @@ class is {
       actualVal: undefined,
       operator: this.opInstance,
       functionName: "undefined",
-      passed: (this.expectVal == undefined)
+      passed: (this.expectVal == undefined),
+      description: this.desc
     };
     testRunner.triggerReturn(triggerResponse);
   }
@@ -58,7 +71,8 @@ class is {
       actualVal: undefined,
       operator: this.opInstance,
       functionName: "nullOrUndefined",
-      passed: (this.expectVal == undefined || this.expectVal == null)
+      passed: (this.expectVal == undefined || this.expectVal == null),
+      description: this.desc
     };
     testRunner.triggerReturn(triggerResponse);
   }
@@ -70,7 +84,8 @@ class is {
       actualVal: undefined,
       operator: this.opInstance,
       functionName: "defined",
-      passed: (this.expectVal != undefined)
+      passed: (this.expectVal != undefined),
+      description: this.desc
     };
     testRunner.triggerReturn(triggerResponse);
   }
@@ -81,8 +96,10 @@ class toBe {
 
   private expectVal: any;
   private opInstance: toBe;
+  private desc: string;
 
-  public constructor(exp: any) {
+  public constructor(desc: string, exp: any) {
+    this.desc = desc;
     this.expectVal = exp;
     this.opInstance = this;
   }
@@ -94,7 +111,8 @@ class toBe {
       actualVal: val,
       operator: this.opInstance,
       functionName: "equalTo",
-      passed: (val == this.expectVal)
+      passed: (val == this.expectVal),
+      description: this.desc
     };
     testRunner.triggerReturn(triggerFail);
   }
@@ -105,7 +123,8 @@ class toBe {
       actualVal: val,
       operator: this.opInstance,
       functionName: "greaterThan",
-      passed: (this.expectVal > val)
+      passed: (this.expectVal > val),
+      description: this.desc
     };
     testRunner.triggerReturn(triggerFail);
   }
@@ -116,7 +135,8 @@ class toBe {
       actualVal: val,
       operator: this.opInstance,
       functionName: "lessThan",
-      passed: (this.expectVal < val)
+      passed: (this.expectVal < val),
+      description: this.desc
     };
     testRunner.triggerReturn(triggerFail);
   }

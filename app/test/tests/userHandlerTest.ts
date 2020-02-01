@@ -1,6 +1,6 @@
 import * as userHandler from '../../handlers/userHandler';
 import { firestore } from 'firebase';
-import { expect } from '../testExtensions';
+import { describe } from '../testExtensions';
 import * as runTests from '../runTests';
 var MockExpressRequest = require('mock-express-request');
 var MockExpressResponse = require('mock-express-response');
@@ -27,8 +27,8 @@ export async function runDeleteTest(db: firestore.Firestore) {
   await db.collection('orgUsers').doc(mockRequest.body.email).get().then(doc => {
     docExists = doc.exists;
   });
-  expect(mockRespsonse._getJSON().deleted).toBe.equalTo(true);
-  expect(docExists).toBe.equalTo(false);
+  describe("User deleted returned true").expect(mockRespsonse._getJSON().deleted).toBe.equalTo(true);
+  describe("Expect doc not to exist").expect(docExists).toBe.equalTo(false);
 }
 
 export async function runCreateTest(db: firestore.Firestore) {
@@ -51,8 +51,8 @@ export async function runCreateTest(db: firestore.Firestore) {
     .then(doc => {
       orgUserResp = doc.data();
     });
-  expect(orgUserResp.name).toBe.equalTo("Jagger");
-  expect(orgUserResp.email).toBe.equalTo("jaggerbrulato@gmail.com");
+  describe("Orguser name should be Jagger").expect(orgUserResp.name).toBe.equalTo("Jagger");
+  describe("Orguser email should be jaggerbrulato@gmail.com").expect(orgUserResp.email).toBe.equalTo("jaggerbrulato@gmail.com");
 }
 
 export async function runGetTest(db: firestore.Firestore) {
@@ -72,9 +72,9 @@ export async function runGetTest(db: firestore.Firestore) {
   let orgUserResp: any;
   await db.collection('orgUsers').doc("jaggerbrulato@gmail.com").get()
     .then(doc => {
-      expect(doc.exists).toBe.equalTo(true);
+      describe("Expect orguser jaggerbrulato@gmail.com doc to exist").expect(doc.exists).toBe.equalTo(true);
       orgUserResp = doc.data();
     });
-  expect(orgUserResp.name).is.defined();
-  expect(orgUserResp.email).toBe.equalTo("jaggerbrulato@gmail.com");
+  describe("Expect OrgUser name to be defined").expect(orgUserResp.name).is.defined();
+  describe("Orguser email should be jaggerbrulato@gmail.com").expect(orgUserResp.email).toBe.equalTo("jaggerbrulato@gmail.com");
 }
