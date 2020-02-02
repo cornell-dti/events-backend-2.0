@@ -32,56 +32,38 @@ const maxDepthDefault = 5;
  * can be passed in json.
  * 
  * @param object The object to materialize
+ * @param depth The maximum depth of materialization (maxDepthDefault = 5)
  */
-export async function materialize(object: any, maxDepth?: number, depth?: number) {
-  let depthVal;
-  let maxDepthVal;
-  if (!isUndefined(depth) && !isUndefined(maxDepth)) {
-    depthVal = depth;
-    maxDepthVal = maxDepth;
-  } else if (isUndefined(depth) && !isUndefined(maxDepth)) {
-    depthVal = 0;
-    maxDepthVal = maxDepth;
-  } else if (!isUndefined(depth) && isUndefined(maxDepth)) {
-    depthVal = depth;
-    maxDepthVal = maxDepthDefault;
-  } else {
-    depthVal = 0;
-    maxDepthVal = maxDepthDefault;
-  }
+export async function materialize(object?: firestore.DocumentData, depth = maxDepthDefault) {
 
-  if (depthVal >= maxDepthVal) {
+  if (depth <= 0) {
     return object;
   }
 
-  let objectStruct: any = Object.assign({}, object);
+  let objectStruct = Object.assign({}, object);
 
-  for (var prop1 in objectStruct) {
-    if (Object.prototype.hasOwnProperty.call(objectStruct, prop1)) {
+  for (let prop in objectStruct) {
+    if (Object.prototype.hasOwnProperty.call(objectStruct, prop)) {
 
-      if (isDocRef(objectStruct[prop1])) {
-        let docRef: firestore.DocumentReference = objectStruct[prop1] as firestore.DocumentReference;
-        let docData;
-        await docRef.get().then(val => {
-          docData = val.data();
-        })
-        objectStruct[prop1] = await materialize(docData, maxDepthVal, depthVal + 1)
+      if (isDocRef(objectStruct[prop])) {
+        let ref = objectStruct[prop] as firestore.DocumentReference;
+        let data = await ref.get().then(val => val.data());
+        objectStruct[prop] = await materialize(data, depth - 1);
       }
-      else if (objectStruct[prop1] instanceof Array && objectStruct[prop1].length > 0
-        && isDocRef(objectStruct[prop1][0])) {
-        let arr = objectStruct[prop1] as Array<firestore.DocumentReference>;
-        let retArr: any = [];
-        for (let i = 0; i < arr.length; i++) {
-          let val = arr[i];
-          let newObj;
-          await val.get().then(valRet => newObj = valRet.data());
-          retArr.push(await materialize(newObj, maxDepthVal, depthVal + 1))
+      else if (objectStruct[prop] instanceof Array && objectStruct[prop].length > 0
+        && isDocRef(objectStruct[prop][0])) {
+        let refArr = objectStruct[prop] as Array<firestore.DocumentReference>;
+        let dataArr = [];
+        for (let i = 0; i < refArr.length; i++) {
+          let ref = refArr[i];
+          let data = await ref.get().then(valRet => valRet.data());
+          dataArr.push(await materialize(data, depth - 1))
         }
-        objectStruct[prop1] = retArr;
+        objectStruct[prop] = dataArr;
       }
-      else if (isCollRef(objectStruct[prop1])) {
-        let collection: firestore.CollectionReference = objectStruct[prop1] as firestore.CollectionReference;
-        objectStruct[prop1] = await materialize(await docRefArrayFromCollectionRef(collection), maxDepthVal, depthVal + 1);
+      else if (isCollRef(objectStruct[prop])) {
+        let collection = objectStruct[prop] as firestore.CollectionReference;
+        objectStruct[prop] = await materialize(await docRefArrayFromCollectionRef(collection), depth - 1);
       }
     }
   }
