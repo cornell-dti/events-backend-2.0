@@ -7,7 +7,8 @@ import { materialize } from "../../util/commonOps";
 //Tests that the materialize function works up to specified depth
 export async function runMaterializeDepthTest(db: firestore.Firestore) {
   const depth = 7;
-  let mockChain = (str: string) => {
+  const str = "enoch";
+  const mockChain = (str: string) => {
     let temp: { ref: any } = { ref: str };
     for (let i = 0; i < depth; i++) {
       temp = { ref: temp };
@@ -15,23 +16,22 @@ export async function runMaterializeDepthTest(db: firestore.Firestore) {
     return temp;
   };
 
-  let testStr = "enoch";
   let ref = db.collection("test").doc(`materializeDepth0`);
-  await ref.set({ ref: testStr });
+  await ref.set({ ref: str });
   for (let i = 1; i <= depth; i++) {
     let temp = ref;
     ref = db.collection("test").doc(`materializeDepth${i}`);
     await ref.set({ ref: temp });
   }
 
-  let res = await ref.get().then(doc => materialize(doc.data(), depth));
+  const res = await ref.get().then(doc => materialize(doc.data(), depth));
   describe(`Doc should exist`)
     .expect(res)
     .is.defined();
 
-  let resJson = JSON.stringify(res);
-  let mockJson = JSON.stringify(mockChain(testStr));
-  describe(`Responses should be equal`)
+  const resJson = JSON.stringify(res);
+  const mockJson = JSON.stringify(mockChain(str));
+  describe(`Response should be fully flattened`)
     .expect(resJson)
     .toBe.equalTo(mockJson);
 
