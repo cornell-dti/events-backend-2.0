@@ -4,7 +4,7 @@
   "description": "Events backend",
   "main": "app.ts",
   "scripts": {
-    "test": "npm run tsc && node build/test/runTests.js",
+    "test": "ts-node app/test/runTests.ts",
     "tsc": "tsc",
     "start": "ts-node app/app.ts > logs.txt"
   },

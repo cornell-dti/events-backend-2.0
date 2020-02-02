@@ -59,14 +59,16 @@ let currentlyRunningTest: Function;
 let pageWidth = 100;
 let firstLine = true;
 let lastLine = false;
+let doTestLog = false;
 
 
 let getMethods = (obj: any) => Object.getOwnPropertyNames(obj).filter(item => typeof obj[item] === 'function' && obj[item].name.toString().toLowerCase().includes("test")).map(item => obj[item] as Function);
 
-async function start() {
+async function start(doTerminalLogging: boolean) {
+  doTestLog = doTerminalLogging;
   let files = fs.readdirSync(__dirname + '/tests/');
   for (let i = 0; i < files.length; i++) {
-    let imported = require('./tests/' + files[i].replace(".js", ""));
+    let imported = require('./tests/' + files[i].replace(".ts", ""));
     let methods = getMethods(imported);
     if (methods.length > 0) {
       testClasses.push(imported);
@@ -112,11 +114,13 @@ function nextTest() {
 
 function endTests() {
   lastLine = true;
-  printLine();
-  console.log("\n\nALL TESTS COMPLETED");
-  console.log("\n ── Tests " + FgGreen + "passed" + FgWhite + ": " + passedTests.length);
-  console.log("\n ── Tests " + FgRed + "failed" + FgWhite + ": " + failedTests.length);
-  console.log("\n\n");
+  if (doTestLog) {
+    printLine();
+    console.log("\n\nALL TESTS COMPLETED");
+    console.log("\n ── Tests " + FgGreen + "passed" + FgWhite + ": " + passedTests.length);
+    console.log("\n ── Tests " + FgRed + "failed" + FgWhite + ": " + failedTests.length);
+    console.log("\n\n");
+  }
 }
 
 let maxValPrintLen = 25;
@@ -142,10 +146,11 @@ export function triggerReturn(exp: testExtensions.Expectation) {
 }
 
 if (typeof require !== 'undefined' && require.main === module) {
-  start();
+  start(true);
 }
 
 function printLine() {
+  if (!doTestLog) return;
   let line = "";
   if (firstLine) {
     firstLine = false;
@@ -173,6 +178,7 @@ function printLine() {
 }
 
 function restrainedLog(s: string, args?: string[]) {
+  if (!doTestLog) return;
   let totalColRef = (s.length - s.replace(new RegExp('[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]', 'g'), "").length) / 10;
   if (s.length > pageWidth + (10 * totalColRef)) {
     let cut = s.slice(0, pageWidth + (10 * totalColRef));
