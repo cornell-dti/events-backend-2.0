@@ -106,16 +106,18 @@ export let responseBoxLog = (msg: string) => {
   console.log(msgBottom);
 };
 
-export function getLogs(dbv: any, reqv: Request, resv: Response) {
-  fs.readFile('logs.txt', { encoding: null, flag: undefined }, (err: any, data: Buffer) => {
-    if (err) {
-      console.log("\nUnable to retrieve logs!");
-      resv.send("Unable to retrieve logs!");
-    } else {
-      resv.send(data);
-    }
+export function getLogs(dbv: any, reqv: Request, resv: Response) : Promise<any> {
+  return new Promise<any>((resolve, reject) => {
+    fs.readFile('logs.txt', { encoding: null, flag: undefined }, (err: any, data: Buffer) => {
+      if (err) {
+        console.log("\nUnable to retrieve logs!");
+        resolve("Unable to retrieve logs!");
+      } else {
+        resolve(data);
+      }
+    });
   });
-};
+}
 
 export function doLog(returned: any, status: boolean, thisArg: any, f: Function, req: Request, res: Response, args?: any[]) {
   requestBoxLog("REQUEST TO: " + req.url);

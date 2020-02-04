@@ -61,6 +61,12 @@ function shell(thisArg: any, f: Function, req: Request, res: Response, args?: an
       });
     } else {
       Logger.doLog(null, true, thisArg, f, req, res, args);
+      promise.then((val) => {
+        res.status(400).send(val);
+      }).catch((reason) => {
+        let error = { "error": "Promise rejected for: " + reason };
+        res.status(200).json(error);
+      });
     }
   }
 }
