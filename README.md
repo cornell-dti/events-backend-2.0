@@ -8,7 +8,7 @@ First, clone the repository.
 
 Create a folder in the root of the project called <code>secrets</code>
 
-Get the private key credential json file from a TPM or PM, and place that file the <code>secrets</code> directory.
+Get the private key credential json file from a TPM or PM, and place that file in the <code>secrets</code> directory.
 
 Then, get the .env file for Eve from a TPM or PM, and place that on the same level as <code>.gitignore</code>.
 
