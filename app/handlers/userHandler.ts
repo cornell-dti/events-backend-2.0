@@ -6,7 +6,7 @@ import { firestore } from "firebase";
 import { Event, Org, OrgUser, StudentUser } from "../types"
 import { EventRequest, CreateUserRequest, GetUserRequest, DeleteUserRequest } from "../requestTypes";
 import { v4 as uuid } from 'uuid';
-import { materializeProm } from "../util/commonOps";
+import { materialize } from "../util/commonOps";
 
 export async function createUser(db: firestore.Firestore, req: Request, res: Response): Promise<any> {
   let request = req.body as CreateUserRequest;
@@ -57,7 +57,7 @@ export async function getUser(db: firestore.Firestore, req: Request, res: Respon
     let orgUserDocRef = db.collection('orgUsers').doc(`${request.email.toLowerCase()}`);
     return orgUserDocRef.get().then(async doc => {
       if (doc.exists) {
-        return materializeProm(doc.data());
+        return materialize(doc.data());
       } else {
         return { error: "OrgUser with email: " + `${request.email.toLowerCase()}` + " not found!" };
       }
@@ -66,7 +66,7 @@ export async function getUser(db: firestore.Firestore, req: Request, res: Respon
     let studentUserDocRef = db.collection('studentUsers').doc(`${request.email.toLowerCase()}`);
     return studentUserDocRef.get().then(async doc => {
       if (doc.exists) {
-        return materializeProm(doc.data());
+        return materialize(doc.data());
       } else {
         return { error: "StudentUser with email: " + `${request.email.toLowerCase()}` + " not found!" };
       }
