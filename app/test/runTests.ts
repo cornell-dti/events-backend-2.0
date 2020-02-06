@@ -89,13 +89,20 @@ async function runTest() {
   restrainedLog("│ " + chalk.cyan("Module") + ": " + chalk.yellow(testClassNames[classIndex]));
   restrainedLog("│ " + chalk.cyan("Running test") + ": " + chalk.magenta(currentlyRunningTest.name));
   restrainedLog("│");
-  let promise = currentlyRunningTest.apply(null, [db]);
-  promise.then(async () => {
-    nextTest();
-    if (!testsOver) {
-      await runTest();
-    }
-  });
+  await currentlyRunningTest.apply(null, [db]);
+  nextTest();
+  if (!testsOver) {
+    await runTest();
+  }
+  // let promise = currentlyRunningTest.apply(null, [db]);
+  // return promise.then(async () => {
+  //   nextTest();
+  //   if (!testsOver) {
+  //     return runTest();
+  //   } else {
+  //     return;
+  //   }
+  // });
 }
 
 function nextTest() {
