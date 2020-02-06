@@ -57,7 +57,7 @@ export async function getUser(db: firestore.Firestore, req: Request, res: Respon
     let orgUserDocRef = db.collection('orgUsers').doc(`${request.email.toLowerCase()}`);
     return orgUserDocRef.get().then(async doc => {
       if (doc.exists) {
-        return await materialize(doc.data());
+        return materialize(doc.data());
       } else {
         return { error: "OrgUser with email: " + `${request.email.toLowerCase()}` + " not found!" };
       }
@@ -66,7 +66,7 @@ export async function getUser(db: firestore.Firestore, req: Request, res: Respon
     let studentUserDocRef = db.collection('studentUsers').doc(`${request.email.toLowerCase()}`);
     return studentUserDocRef.get().then(async doc => {
       if (doc.exists) {
-        return await materialize(doc.data());
+        return materialize(doc.data());
       } else {
         return { error: "StudentUser with email: " + `${request.email.toLowerCase()}` + " not found!" };
       }
