@@ -94,15 +94,6 @@ async function runTest() {
   if (!testsOver) {
     await runTest();
   }
-  // let promise = currentlyRunningTest.apply(null, [db]);
-  // return promise.then(async () => {
-  //   nextTest();
-  //   if (!testsOver) {
-  //     return runTest();
-  //   } else {
-  //     return;
-  //   }
-  // });
 }
 
 function nextTest() {
