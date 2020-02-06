@@ -21,7 +21,7 @@ export async function docRefArrayFromCollectionRef(coll: firestore.CollectionRef
   });
 }
 
-const maxDepthDefault = 10;
+const maxDepthDefault = 5;
 
 /**
  * This function takes in a JS struct, and recursively flattens out all the
