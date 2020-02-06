@@ -29,7 +29,7 @@ The tests are run using expectation statements, which can be performed by includ
 
 <code>descibe("name of test").expect(val1).verb.comparison(?val2)</code>
 
-where val2 is optional depending on the comparison made. Here are some examples are included below:
+where val2 is optional depending on the comparison made. Some examples are included below:
 
 <code>describe("1 equals 1").expect(1).toBe.equalTo(1)</code>
 would evaulate to *true*
