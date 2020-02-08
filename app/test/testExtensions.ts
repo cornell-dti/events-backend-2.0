@@ -31,11 +31,13 @@ class is {
   private expectVal: any;
   private opInstance: is;
   private desc: string;
+  public name:string;
 
   public constructor(desc: string, exp: any) {
     this.desc = desc;
     this.expectVal = exp;
     this.opInstance = this;
+    this.name = 'is';
   }
 
   public null() {
@@ -97,11 +99,13 @@ class toBe {
   private expectVal: any;
   private opInstance: toBe;
   private desc: string;
+  public name: string;
 
   public constructor(desc: string, exp: any) {
     this.desc = desc;
     this.expectVal = exp;
     this.opInstance = this;
+    this.name = 'toBe';
   }
 
   public equalTo(val: any) {

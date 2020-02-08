@@ -2,6 +2,10 @@ import * as testExtensions from './testExtensions';
 import { isUndefined } from 'util';
 const chalk = require('chalk');
 var fs = require('fs');
+import * as express from "express";
+import * as socketio from "socket.io";
+import {Express} from "express";
+const eventBus = require('js-event-bus')();
 
 // Read .env file --------------------------------------------------------------
 const dotenv = require('dotenv').config();
@@ -42,11 +46,32 @@ let colors = [FgRed, FgGreen, FgWhite, FgYellow, FgMagenta, FgCyan];
 
 // -----------------------------------------------------------------------------
 
+export type ExpectationRep = {
+  description: string;
+  expectVal: string;
+  actualVal: string;
+  operator: string;
+  comparisonName: string;
+  passed: boolean;
+}
+
+export type TestResult = {
+  expectations: Array<ExpectationRep>,
+  testClass: any,
+  testFuncName: string,
+  testClassName: string,
+  passed: boolean,
+  hasRun: boolean,
+  cInd: number,
+  tInd: number
+}
+
 let testClasses: any[] = [];
 let testClassTests: Function[][] = [];
 let testClassNames: string[] = [];
 let classIndex = 0;
 let testIndex = 0;
+export let testResults: TestResult[][] = [];
 
 let passedTests = [];
 let failedTests = [];
@@ -61,11 +86,88 @@ let firstLine = true;
 let lastLine = false;
 let doTestLog = false;
 
+let getExpRep = (exp: testExtensions.Expectation) => {
+  return {
+    description: exp.description,
+    expectVal: exp.expectVal ? (exp.expectVal.toString().length <= 20 ? exp.expectVal.toString() : exp.expectVal.toString().substr(0, 17) + '...') : 'undefined',
+    actualVal: exp.actualVal ? (exp.actualVal.toString().length <= 20 ? exp.actualVal.toString() : exp.actualVal.toString().substr(0, 17) + '...') : 'undefined',
+    operator: exp.operator.name,
+    comparisonName: exp.functionName,
+    passed: exp.passed
+  } as ExpectationRep;
+};
+
+let singleRunPromChain: Promise<any> | undefined = undefined;
+
+let serverStarted = false;
+
+function startServer(){
+  const express = require('express');
+  const app: Express = express();
+  let http = require("http").Server(app);
+// set up socket.io and bind it to our
+// http server.
+  let io = require("socket.io")(http);
+  io.on('connection', function(socket: any){
+    socket.on('requestFullRerun', function () {
+      start(false).then(() => {
+        socket.emit('currentTests', testResults);
+      });
+    });
+    socket.on('requestRerun', function(request:string){
+      let reqSplits = request.split(";;");
+      let cInd = Number(reqSplits[0]);
+      let tInd = Number(reqSplits[1]);
+      if(singleRunPromChain === undefined){
+        singleRunPromChain = runOneTest(cInd, tInd).then((val) => {
+          socket.emit('rerunResult', testResults[cInd][tInd]);
+        });
+      } else {
+        singleRunPromChain.then(() => {
+          return runOneTest(cInd, tInd).then((val) => {
+            socket.emit('rerunResult', testResults[cInd][tInd]);
+          });
+        })
+      }
+    });
+    socket.on('initConnect', function(connection:any){
+      socket.emit('currentTests', testResults);
+      eventBus.on('singleTestFinish', function () {
+        socket.emit('singleTestFinish', testResults[classIndex][testIndex]);
+      })
+    });
+  });
+  const server = http.listen(9909, function() {
+    console.log("test-suite backend listening on *:9909");
+  });
+  serverStarted = true;
+}
+
 
 let getMethods = (obj: any) => Object.getOwnPropertyNames(obj).filter(item => typeof obj[item] === 'function' && obj[item].name.toString().toLowerCase().includes("test")).map(item => obj[item] as Function);
 
 async function start(doTerminalLogging: boolean) {
   doTestLog = doTerminalLogging;
+  doTestSetup();
+  if(!doTerminalLogging){
+    if(!serverStarted){
+      startServer();
+    }
+  }
+  await runTest();
+}
+
+export function doTestSetup(){
+  testsOver = false;
+  testClasses = [];
+  testClassTests = [];
+  testClassNames = [];
+  classIndex = 0;
+  testIndex = 0;
+  testResults = [];
+  passedTests = [];
+  failedTests = [];
+
   let files = fs.readdirSync(__dirname + '/tests/');
   for (let i = 0; i < files.length; i++) {
     let imported = require('./tests/' + files[i].replace(".ts", ""));
@@ -76,13 +178,19 @@ async function start(doTerminalLogging: boolean) {
       testClassNames.push(files[i]);
     }
   }
-  await runTest();
+  for(let n = 0; n < testClasses.length; n++){
+    testResults.push([]);
+    for(let x = 0; x < testClassTests[n].length; x++){
+      testResults[n].push({ hasRun: false, expectations: [], testClass: testClasses[n], testClassName: testClassNames[n], testFuncName: testClassTests[n][x].name, passed: true, cInd: n, tInd: x});
+    }
+  }
 }
 
 const varToString = (varObj: any) => Object.keys(varObj)[0];
 
 async function runTest() {
   printLine();
+  testResults[classIndex][testIndex].expectations = [];
   currentlyRunningTest = testClassTests[classIndex][testIndex];
   restrainedLog("│");
   restrainedLog("│");
@@ -96,7 +204,23 @@ async function runTest() {
   }
 }
 
+async function runOneTest(cInd: number, tInd: number) {
+  testResults[cInd][tInd].expectations = [];
+  printLine();
+  classIndex = cInd;
+  testIndex = tInd;
+  currentlyRunningTest = testClassTests[cInd][tInd];
+  restrainedLog("│");
+  restrainedLog("│");
+  restrainedLog("│ " + chalk.cyan("Module") + ": " + chalk.yellow(testClassNames[classIndex]));
+  restrainedLog("│ " + chalk.cyan("Running test") + ": " + chalk.magenta(currentlyRunningTest.name));
+  restrainedLog("│");
+  return currentlyRunningTest.apply(null, [db]);
+}
+
 function nextTest() {
+  testResults[classIndex][testIndex].hasRun = true;
+  eventBus.emit('singleTestFinish');
   let testClass = testClasses[classIndex];
   if (testIndex == testClassTests[classIndex].length - 1) {
     if (classIndex == testClasses.length - 1) {
@@ -137,14 +261,16 @@ export function triggerReturn(exp: testExtensions.Expectation) {
   if (!exp.passed) {
     restrainedLog("│   └─── " + chalk.red("FAILED") + ": Expected " + expStr + " " + exp.operator.constructor.name + " " + exp.functionName + actStr + "!");
     failedTests.push(currentlyRunningTest);
+    testResults[classIndex][testIndex].passed = false;
   } else {
     passedTests.push(currentlyRunningTest);
   }
+  testResults[classIndex][testIndex].expectations.push(getExpRep(exp));
   restrainedLog("│");
 }
 
 if (typeof require !== 'undefined' && require.main === module) {
-  start(true);
+  let x = start(process.argv.slice(2)[0] === "log");
 }
 
 function printLine() {
