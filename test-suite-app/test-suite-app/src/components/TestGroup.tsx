@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {TestClass} from "./TestClass";
 import {TestResult} from "../Types";
-import socketIOClient from "socket.io-client";
 import {Internet} from "../util/Internet";
 import {Button} from "@material-ui/core";
 
@@ -14,15 +13,10 @@ type TestGroupProps = {
 }
 
 
-const boldName: React.CSSProperties = { fontWeight: 'bolder', fontFamily: 'Arial', fontSize: '30pt' };
 const expand: React.CSSProperties = { width: '100%', height: '100%' };
 const leftAlign: React.CSSProperties = { textAlign: 'left', float: 'left'};
 
 export class TestGroup extends Component<TestGroupProps, TestGroupState> {
-
-    constructor(props: Readonly<TestGroupProps>) {
-        super(props);
-    }
 
     componentDidMount() {
         const { endpoint } = this.props;

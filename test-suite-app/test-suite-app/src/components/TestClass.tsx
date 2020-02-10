@@ -12,10 +12,6 @@ const expand: React.CSSProperties = { width: '100%', height: '100%' };
 
 export class TestClass extends Component<TestClassProps> {
 
-    constructor(props: Readonly<TestClassProps>) {
-        super(props);
-    }
-
     static defaultProps = {
         testResults: []
     };

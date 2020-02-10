@@ -5,6 +5,7 @@ var fs = require('fs');
 import * as express from "express";
 import * as socketio from "socket.io";
 import {Express} from "express";
+import * as path from "path";
 const eventBus = require('js-event-bus')();
 
 // Read .env file --------------------------------------------------------------
@@ -157,6 +158,12 @@ async function start(doTerminalLogging: boolean) {
   await runTest();
 }
 
+function requireUncached(module:any){
+  delete require.cache[require.resolve(module)];
+  require(module);
+  return require(module);
+}
+
 export function doTestSetup(){
   testsOver = false;
   testClasses = [];
@@ -168,9 +175,14 @@ export function doTestSetup(){
   passedTests = [];
   failedTests = [];
 
+  let files2 = fs.readdirSync(path.resolve('./app/handlers/'));
+  for (let i = 0; i < files2.length; i++) {
+    let imported = requireUncached(path.resolve('./app/handlers/') + '/' + files2[i].replace(".ts", ""));
+  }
+
   let files = fs.readdirSync(__dirname + '/tests/');
   for (let i = 0; i < files.length; i++) {
-    let imported = require('./tests/' + files[i].replace(".ts", ""));
+    let imported = requireUncached('./tests/' + files[i].replace(".ts", ""));
     let methods = getMethods(imported);
     if (methods.length > 0) {
       testClasses.push(imported);
@@ -183,6 +195,13 @@ export function doTestSetup(){
     for(let x = 0; x < testClassTests[n].length; x++){
       testResults[n].push({ hasRun: false, expectations: [], testClass: testClasses[n], testClassName: testClassNames[n], testFuncName: testClassTests[n][x].name, passed: true, cInd: n, tInd: x});
     }
+  }
+}
+
+function reimportHandlers(){
+  let files2 = fs.readdirSync(path.resolve('./app/handlers/'));
+  for (let i = 0; i < files2.length; i++) {
+    let imported = requireUncached(path.resolve('./app/handlers/') + '/' + files2[i].replace(".ts", ""));
   }
 }
 
@@ -205,7 +224,15 @@ async function runTest() {
 }
 
 async function runOneTest(cInd: number, tInd: number) {
+  reimportHandlers();
+  let imported = requireUncached('./tests/' + testClassNames[cInd].replace(".ts", ""));
+  let methods = getMethods(imported);
+  if (methods.length > 0) {
+    testClasses[cInd] = imported;
+    testClassTests[cInd] = methods;
+  }
   testResults[cInd][tInd].expectations = [];
+  testResults[cInd][tInd].passed = true;
   printLine();
   classIndex = cInd;
   testIndex = tInd;

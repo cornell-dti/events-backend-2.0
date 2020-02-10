@@ -1,17 +1,15 @@
 import React, { Component } from 'react';
-import {ExpectationRep, TestResult} from "../Types";
+import {TestResult} from "../Types";
 import {Internet} from "../util/Internet";
-import {Button, Card, CardActions, CardContent, Icon, IconButton, Typography} from "@material-ui/core";
+import {Button, Card, CardContent, IconButton, Typography} from "@material-ui/core";
 import {ExpectationComponent} from "./ExpectationComponent";
-import {ArrowDropDown, ArrowLeft, ArrowRight} from "@material-ui/icons";
+import {ArrowDropDown, ArrowRight} from "@material-ui/icons";
 
 export type TestProps = {
     endpoint: string,
     testResult: TestResult
 };
 
-const boldName: React.CSSProperties = { fontWeight: 'bolder', fontFamily: 'Arial', fontSize: '30pt' };
-const expand: React.CSSProperties = { width: '100%', height: '100%' };
 const leftAlign: React.CSSProperties = { textAlign: 'left', float: 'left'};
 const brStyle1: React.CSSProperties = { display: 'block', marginTop: '0.9em' };
 const brStyle2: React.CSSProperties = { display: 'block', marginTop: '1.7em' };
@@ -22,10 +20,6 @@ const testFuncStyling: React.CSSProperties = { fontWeight: 'bold' };
 export class Test extends Component<TestProps> {
 
     public testsAreOpen : boolean = false;
-
-    constructor(props: Readonly<TestProps>) {
-        super(props);
-    }
     
     requestRerun(){
         return () => {
@@ -82,13 +76,5 @@ export class Test extends Component<TestProps> {
                 </div>
             </CardContent>
         </Card>)
-        // return (<div style={{ ...expand, ...boldName, marginLeft: '1em' }}>
-        //     <div style={{ width: '10vw' }}>
-        //         <p onClick={this.requestRerun(this)} style={{...boldName, fontSize: '14pt', textAlign: 'left' }}>{this.props.testResult.testFuncName}</p>
-        //     </div>
-        //     <div style={{ width: '20vw' }}>
-        //         <p style={{...boldName, fontSize: '11pt', textAlign: 'left', marginLeft: '4em' }}>{'Passed: ' + String(this.props.testResult.passed)}</p>
-        //     </div>
-        // </div>)
     }
 }

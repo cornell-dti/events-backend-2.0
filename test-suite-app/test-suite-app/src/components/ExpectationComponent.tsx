@@ -12,10 +12,11 @@ const bold: React.CSSProperties = { fontWeight: 'bold' };
 const brStyle1: React.CSSProperties = { display: 'block', marginTop: '0.7em' };
 
 export const ExpectationComponent = (exp: ExpectationRep) => {
+    let descColor = exp.passed ? 'black' : 'red';
     return (
         <div>
             <Typography style={{ ...leftAlign, ...fillWidth }} variant="body2" component="p">
-                <span style={{ ...testDesc }}>{exp.description}</span>
+                <span style={{ ...testDesc, color: descColor }}>{exp.description}</span>
                 <span style={{ ...brStyle1 }}/>
                 <span style={{ ...blueText }}>Expected </span>
                 <span style={{ ...orangeText, ...bold }}>{exp.expectVal} </span>

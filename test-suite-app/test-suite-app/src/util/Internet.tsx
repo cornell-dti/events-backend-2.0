@@ -1,5 +1,4 @@
 import socketIOClient from "socket.io-client";
-import SocketIO from "socket.io";
 
 export class Internet {
 
