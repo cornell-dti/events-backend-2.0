@@ -4,7 +4,9 @@
   "description": "Events backend",
   "main": "app.ts",
   "scripts": {
-    "test": "ts-node app/test/runTests.ts",
+    "installAll": "npm i && cd test-suite-app/test-suite-app/ && npm i",
+    "test": "ts-node app/test/runTests.ts ui & cd test-suite-app/test-suite-app/ && npm start",
+    "terminalTest": "ts-node app/test/runTests.ts log",
     "tsc": "tsc",
     "start": "ts-node app/app.ts > logs.txt"
   },
@@ -27,6 +29,8 @@
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.2",
     "@types/firebase": "^3.2.1",
+    "@types/socket.io": "^2.1.4",
+    "@types/socket.io-client": "^1.4.32",
     "@types/uuid": "^3.4.6",
     "base": "^3.0.0",
     "chalk": "^3.0.0",
@@ -35,8 +39,11 @@
     "firebase-admin": "^8.8.0",
     "growl": "^1.10.5",
     "js-data": "^3.0.8",
+    "js-event-bus": "^1.0.0",
     "mock-express-request": "^0.2.2",
     "mock-express-response": "^0.2.2",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
     "ts-node": "^8.6.2",
     "typescript": "^3.7.2",
     "uuid": "^3.3.3"

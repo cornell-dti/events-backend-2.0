@@ -9,7 +9,6 @@ var MockExpressResponse = require('mock-express-response');
 // Begin Tests -----------------------------------------------------------------
 
 export async function runDeleteTest(db: firestore.Firestore) {
-
   let mockRequest = new MockExpressRequest(
     {
       method: 'POST',
@@ -44,7 +43,7 @@ export async function runCreateTest(db: firestore.Firestore) {
     }
   );
   let mockResponse = new MockExpressResponse();
-  // Simulate the app's sending of handler output to resposne
+  // Simulate the app's sending of handler output to response
   mockResponse.json(await userHandler.createUser(db, mockRequest, mockResponse));
   let orgUserResp: any;
   await db.collection('orgUsers').doc("jaggerbrulato@gmail.com").get()
