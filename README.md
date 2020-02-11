@@ -32,16 +32,16 @@ The tests are run using expectation statements, which can be performed by includ
 where val2 is optional depending on the comparison made. Some examples are included below:
 
 <code>describe("1 equals 1").expect(1).toBe.equalTo(1)</code>
-would evaulate to *true*
+would evaulate to **true**
 
 <code>describe("1 equals 2").expect(1).toBe.equalTo(2)</code>
-would evaulate to *false*
+would evaulate to **false**
 
 <code>describe("1 is defined").expect(1).is.defined()</code>
-would evaulate to *true*
+would evaulate to **true**
 
 <code>describe("1 is undefined").expect(1).is.undefined()</code>
-would evaulate to *false*
+would evaulate to **false**
 
 These expectation statements will automatically be registered and run by the testing file and will appear in the testing output. The descriptions will be printed along with the tests to identify them should one fail. There is no need to return anything or register anything, so long as all the expect statements pass, the test will be considered to have passed!
 
