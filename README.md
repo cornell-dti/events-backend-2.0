@@ -12,7 +12,7 @@ Get the private key credential json file from a TPM or PM, and place that file i
 
 Then, get the .env file for Eve from a TPM or PM, and place that on the same level as <code>.gitignore</code>.
 
-Run <code>npm install</code>
+Run <code>npm run installAll</code>
 
 ## How to run
 
