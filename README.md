@@ -49,7 +49,7 @@ Then in order to run the testing script in the command line, simply call:
 
 <code>npm run terminalTest</code>
 
-Or, use the custom test suite which allows you to edit the source files of the endpoint handlers and tests in real time, then re-run them with the new code (without restarting the server or testing script). It also lets you run individual tests, so you can change the console output in the test and endpoint handler and re-run that test over and over while developing.
+Or, use the _**custom test suite**_ which allows you to edit the source files of the endpoint handlers and tests in real time, then re-run them with the new code (without restarting the server or testing script). It also lets you run individual tests, so you can change the console output in the test and endpoint handler and re-run that test over and over while developing.
 
 To do this, simply run:
 
