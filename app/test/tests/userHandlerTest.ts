@@ -9,7 +9,6 @@ var MockExpressResponse = require('mock-express-response');
 // Begin Tests -----------------------------------------------------------------
 
 export async function runDeleteTest(db: firestore.Firestore) {
-
   let mockRequest = new MockExpressRequest(
     {
       method: 'POST',
@@ -20,14 +19,14 @@ export async function runDeleteTest(db: firestore.Firestore) {
       }
     }
   );
-  let mockRespsonse = new MockExpressResponse();
-  // Simulate the app's sending of handler output to resposne
-  mockRespsonse.json(await userHandler.deleteUser(db, mockRequest, mockRespsonse));
+  let mockResponse = new MockExpressResponse();
+  // Simulate the app's sending of handler output to response
+  mockResponse.json(await userHandler.deleteUser(db, mockRequest, mockResponse));
   let docExists;
   await db.collection('orgUsers').doc(mockRequest.body.email).get().then(doc => {
     docExists = doc.exists;
   });
-  describe("User deleted returned true").expect(mockRespsonse._getJSON().deleted).toBe.equalTo(true);
+  describe("User deleted returned true").expect(mockResponse._getJSON().deleted).toBe.equalTo(true);
   describe("Expect doc not to exist").expect(docExists).toBe.equalTo(false);
 }
 
@@ -43,9 +42,9 @@ export async function runCreateTest(db: firestore.Firestore) {
       }
     }
   );
-  let mockRespsonse = new MockExpressResponse();
-  // Simulate the app's sending of handler output to resposne
-  mockRespsonse.json(await userHandler.createUser(db, mockRequest, mockRespsonse));
+  let mockResponse = new MockExpressResponse();
+  // Simulate the app's sending of handler output to response
+  mockResponse.json(await userHandler.createUser(db, mockRequest, mockResponse));
   let orgUserResp: any;
   await db.collection('orgUsers').doc("jaggerbrulato@gmail.com").get()
     .then(doc => {
@@ -66,9 +65,9 @@ export async function runGetTest(db: firestore.Firestore) {
       }
     }
   );
-  let mockRespsonse = new MockExpressResponse();
+  let mockResponse = new MockExpressResponse();
   // Simulate the app's sending of handler output to resposne
-  mockRespsonse.json(await userHandler.getUser(db, mockRequest, mockRespsonse));
+  mockResponse.json(await userHandler.getUser(db, mockRequest, mockResponse));
   let orgUserResp: any;
   await db.collection('orgUsers').doc("jaggerbrulato@gmail.com").get()
     .then(doc => {
