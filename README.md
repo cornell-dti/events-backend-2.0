@@ -45,7 +45,13 @@ would evaulate to *false*
 
 These expectation statements will automatically be registered and run by the testing file and will appear in the testing output. The descriptions will be printed along with the tests to identify them should one fail. There is no need to return anything or register anything, so long as all the expect statements pass, the test will be considered to have passed!
 
-Then in order to run the testing script, simply call:
+Then in order to run the testing script in the command line, simply call:
+
+<code>npm run terminalTest</code>
+
+Or, use the custom test suite which allows you to edit the source files of the endpoint handlers and tests in real time, then re-run them with the new code (without restarting the server or testing script). It also lets you run individual tests, so you can change the console output in the test and endpoint handler and re-run that test over and over while developing.
+
+To do this, simply run:
 
 Run <code>npm test</code>
 
