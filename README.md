@@ -53,7 +53,7 @@ Or, use the custom test suite which allows you to edit the source files of the e
 
 To do this, simply run:
 
-Run <code>npm test</code>
+<code>npm test</code>
 
 #### Contributors
 2019 - Jagger Brulato (architecture, test suite, Logger, DevOps)
