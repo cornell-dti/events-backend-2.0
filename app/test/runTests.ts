@@ -119,16 +119,16 @@ function startServer(){
       let reqSplits = request.split(";;");
       let cInd = Number(reqSplits[0]);
       let tInd = Number(reqSplits[1]);
-      if(singleRunPromChain === undefined){
+      if(singleRunPromChain == undefined){
         singleRunPromChain = runOneTest(cInd, tInd).then((val) => {
           socket.emit('rerunResult', testResults[cInd][tInd]);
         });
       } else {
-        singleRunPromChain.then(() => {
+        singleRunPromChain = singleRunPromChain.then(() => {
           return runOneTest(cInd, tInd).then((val) => {
             socket.emit('rerunResult', testResults[cInd][tInd]);
           });
-        })
+        });
       }
     });
     socket.on('initConnect', function(connection:any){
@@ -224,6 +224,7 @@ async function runTest() {
 }
 
 async function runOneTest(cInd: number, tInd: number) {
+  testsOver = false;
   reimportHandlers();
   let imported = requireUncached('./tests/' + testClassNames[cInd].replace(".ts", ""));
   let methods = getMethods(imported);
@@ -242,7 +243,7 @@ async function runOneTest(cInd: number, tInd: number) {
   restrainedLog("│ " + chalk.cyan("Module") + ": " + chalk.yellow(testClassNames[classIndex]));
   restrainedLog("│ " + chalk.cyan("Running test") + ": " + chalk.magenta(currentlyRunningTest.name));
   restrainedLog("│");
-  return currentlyRunningTest.apply(null, [db]);
+  return currentlyRunningTest.apply(null, [db]).then(() => {testsOver = true;});
 }
 
 function nextTest() {
