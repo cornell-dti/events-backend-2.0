@@ -20,6 +20,17 @@ export async function runDeleteTest(db: firestore.Firestore) {
     }
   );
   let mockResponse = new MockExpressResponse();
+  let preDoc = db.collection('orgUsers').doc("jaggerbrulato@gmail.com");
+  await preDoc.get().then(async (snap) => {
+      if(snap.exists){
+          return;
+      }
+      await preDoc.set({
+          email: "jaggerbrulato@gmail.com",
+          name: "Jagger",
+          uuid: "800ff79a-dee3-4926-8768-4101dae2007d"
+      });
+  });
   // Simulate the app's sending of handler output to response
   mockResponse.json(await userHandler.deleteUser(db, mockRequest, mockResponse));
   let docExists;
@@ -43,6 +54,13 @@ export async function runCreateTest(db: firestore.Firestore) {
     }
   );
   let mockResponse = new MockExpressResponse();
+  let preDoc = db.collection('orgUsers').doc("jaggerbrulato@gmail.com");
+  await preDoc.get().then(async (snap) => {
+      if(snap.exists){
+          await snap.ref.delete();
+          return;
+      }
+  });
   // Simulate the app's sending of handler output to response
   mockResponse.json(await userHandler.createUser(db, mockRequest, mockResponse));
   let orgUserResp: any;
@@ -66,6 +84,17 @@ export async function runGetTest(db: firestore.Firestore) {
     }
   );
   let mockResponse = new MockExpressResponse();
+  let preDoc = db.collection('orgUsers').doc("jaggerbrulato@gmail.com");
+  await preDoc.get().then(async (snap) => {
+      if(snap.exists){
+          return;
+      }
+      await preDoc.set({
+          email: "jaggerbrulato@gmail.com",
+          name: "Jagger",
+          uuid: "800ff79a-dee3-4926-8768-4101dae2007d"
+      });
+  });
   // Simulate the app's sending of handler output to resposne
   mockResponse.json(await userHandler.getUser(db, mockRequest, mockResponse));
   let orgUserResp: any;
