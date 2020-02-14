@@ -57,4 +57,5 @@ To do this, simply run:
 
 #### Contributors
 2019, 2020 - Jagger Brulato (architecture, test suite, Logger, DevOps)
+
 2020 - Enoch Chen
