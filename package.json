@@ -5,7 +5,7 @@
   "main": "app.ts",
   "scripts": {
     "installAll": "npm i && cd test-suite-app/test-suite-app/ && npm i",
-    "test": "ts-node app/test/runTests.ts ui & cd test-suite-app/test-suite-app/ && npm start",
+    "test": "concurrently \"ts-node app/test/runTests.ts ui\" \"cd test-suite-app/test-suite-app/ && npm start\"",
     "terminalTest": "ts-node app/test/runTests.ts log",
     "tsc": "tsc",
     "start": "ts-node app/app.ts > logs.txt"
@@ -34,6 +34,7 @@
     "@types/uuid": "^3.4.6",
     "base": "^3.0.0",
     "chalk": "^3.0.0",
+    "concurrently": "^5.1.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "firebase-admin": "^8.8.0",
