@@ -3,88 +3,59 @@
 
 import { Request, Response } from "express-serve-static-core";
 import { firestore } from "firebase";
-import { Event, Org, OrgUser, StudentUser } from "../types"
+import { Event, Org, UserInfo } from "../types"
 import { EventRequest, CreateUserRequest, GetUserRequest, DeleteUserRequest } from "../requestTypes";
 import { v4 as uuid } from 'uuid';
 import { materialize } from "../util/commonOps";
+import { auth } from '../util/firebase';
 
 export async function createUser(db: firestore.Firestore, req: Request, res: Response): Promise<any> {
   let request = req.body as CreateUserRequest;
-  if (request.isOrgUser) {
-    let orgUser: OrgUser = {
-      name: request.name,
-      uuid: uuid(),
-      email: request.email.toLowerCase()
-    }
-    let orgUserRef: firestore.DocumentReference = db.collection('orgUsers').doc(`${orgUser.email}`)
-    return orgUserRef.get().then(
-      async doc => {
-        let orgUserDoc = doc;
-        if (orgUserDoc.exists) {
-          return { error: "OrgUser already exists!" };
-        } else {
-          return orgUserRef.set(orgUser).then((val) => {
-            return (orgUser);
-          });
-        }
+  let id = request.email.toLowerCase();
+  let user: UserInfo = {
+    tags: request.tags || []
+  };
+  let userRef: firestore.DocumentReference = db.collection('users').doc(id);
+  return userRef.get().then(
+    async doc => {
+      let userDoc = doc;
+      if (userDoc.exists) {
+        return { error: "User already exists!" };
+      } else {
+        return userRef.set(user).then((val) => {
+          return "User successfully created!";
+        });
       }
-    );
-  } else {
-    let studentUser: StudentUser = {
-      name: request.name,
-      uuid: uuid(),
-      email: request.email.toLowerCase()
     }
-    let studentUserRef: firestore.DocumentReference = db.collection('studentUsers').doc(`${studentUser.email}`)
-    return studentUserRef.get().then(
-      async doc => {
-        let studentUserDoc = doc;
-        if (studentUserDoc.exists) {
-          return { error: "StudentUser already exists!" };
-        } else {
-          return studentUserRef.set(studentUser).then(() => {
-            return (studentUser);
-          });
-        }
-      }
-    );
-  }
+  );
+
 }
 
 export async function getUser(db: firestore.Firestore, req: Request, res: Response): Promise<any> {
   let request = req.body as GetUserRequest;
-  if (request.isOrgUser) {
-    let orgUserDocRef = db.collection('orgUsers').doc(`${request.email.toLowerCase()}`);
-    return orgUserDocRef.get().then(async doc => {
-      if (doc.exists) {
-        return materialize(doc.data());
-      } else {
-        return { error: "OrgUser with email: " + `${request.email.toLowerCase()}` + " not found!" };
+  let id = request.email.toLowerCase();
+  let userDocRef = db.collection('users').doc(id);
+  return auth.getUserByEmail(id)
+    .then(async ({ uid, email, displayName, photoURL }) => {
+      const doc = await userDocRef.get();
+      if (!doc.exists) {
+        throw `User with email: ${id} not found!`;
       }
+      return {
+        uid, email, displayName, photoURL, ...await materialize(doc.data())
+      };
+    })
+    .catch((error) => {
+      console.log('Error fetching user data:', error);
+      return { error: error };
     });
-  } else {
-    let studentUserDocRef = db.collection('studentUsers').doc(`${request.email.toLowerCase()}`);
-    return studentUserDocRef.get().then(async doc => {
-      if (doc.exists) {
-        return materialize(doc.data());
-      } else {
-        return { error: "StudentUser with email: " + `${request.email.toLowerCase()}` + " not found!" };
-      }
-    });
-  }
 }
 
 export async function deleteUser(db: firestore.Firestore, req: Request, res: Response): Promise<any> {
   let request = req.body as DeleteUserRequest;
-  if (request.isOrgUser) {
-    let orgUserDocRef = db.collection('orgUsers').doc(`${request.email.toLowerCase()}`);
-    return orgUserDocRef.delete().then((val) => {
-      return { deleted: true };
-    });
-  } else {
-    let studentUserDocRef = db.collection('studentUsers').doc(`${request.email.toLowerCase()}`);
-    return studentUserDocRef.delete().then((val) => {
-      return { deleted: true };
-    });
-  }
+  let id = request.email.toLowerCase();
+  let userDocRef = db.collection('users').doc(id);
+  return userDocRef.delete().then((val) => {
+    return { deleted: true };
+  });
 }
