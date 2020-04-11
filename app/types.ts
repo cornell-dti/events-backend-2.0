@@ -3,35 +3,28 @@
 import { firestore } from "firebase";
 
 export type Event = {
-  uuid: string;
   name: string;
   description: string;
   startDate: Date;
   endDate: Date;
+  numAttendees: number;
   organizer: firestore.DocumentReference;
-  location: Location;
+  location: {
+    room: string;
+    place_id: string;
+    building: string;
+  }
   tags: string[];
-  media: firestore.DocumentReference[];
+  media: string;
 }
 
 export type Org = {
-  uuid: string;
   name: string;
   bio: string;
   website: string;
   email: string;
+  media: string;
   orgUser: firestore.DocumentReference;
-}
-
-export type Location = {
-  room: string;
-  place_id: string;
-  building: string;
-}
-
-export type Media = {
-  link: string;
-  uploader: firestore.DocumentReference;
 }
 
 export type UserInfo = {
