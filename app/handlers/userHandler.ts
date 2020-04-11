@@ -28,7 +28,6 @@ export async function createUser(db: firestore.Firestore, req: Request, res: Res
       }
     }
   );
-
 }
 
 export async function getUser(db: firestore.Firestore, req: Request, res: Response): Promise<any> {
