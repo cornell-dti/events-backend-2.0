@@ -4,7 +4,7 @@
 import { Request, Response } from "express-serve-static-core";
 import { firestore } from "firebase";
 import { Event, Org, UserInfo } from "../types"
-import { EventRequest, CreateUserRequest, GetUserRequest, DeleteUserRequest } from "../requestTypes";
+import { CreateUserRequest, GetUserRequest, DeleteUserRequest } from "../requestTypes";
 import { v4 as uuid } from 'uuid';
 import { materialize } from "../util/commonOps";
 import { auth } from '../util/firebase';
