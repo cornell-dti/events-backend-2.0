@@ -6,6 +6,7 @@ import { Express } from "express";
 import * as Logger from "./logging/logger";
 // import * as handler from "./handler";
 import * as userHandler from "./handlers/userHandler";
+import * as eventHandler from "./handlers/eventHandler";
 import { db } from "./util/firebase"
 
 // Express ---------------------------------------------------------------------
@@ -51,6 +52,10 @@ function main() {
   app.get('/getUser/', (req: Request, res: Response) => shell(userHandler, userHandler.getUser, req, res, [db, req, res]));
   app.delete('/deleteUser/', (req: Request, res: Response) => shell(userHandler, userHandler.deleteUser, req, res, [db, req, res]));
 
+  // Events
+  app.post('/createEvent/',(req: Request, res: Response) => shell(eventHandler, eventHandler.createEvent, req, res, [db, req, res]));
+
+  
   app.listen(port, () => console.log(`Backend running on http://localhost:${port}`))
 }
 main();

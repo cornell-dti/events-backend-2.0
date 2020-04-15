@@ -14,18 +14,30 @@ export type GetUserRequest = {
   email: string;
 }
 
+// when do you put question mark when its optional?
 export type CreateEventRequest = {
   email: string;
   name: string;
   description: string;
   startDate: Date;
   endDate: Date;
-  organizer: firestore.DocumentReference;
   location: {
     room: string;
-    place_id: string;
+    placeId: string;
     building: string;
   }
   tags: string[];
   media: string; 
+}
+
+export type GetEventRequest = {
+  eventId: string;
+}
+
+export type GetEventsRequest = {
+  email: string;
+}
+export type DeleteEventRequest = {
+  id: string;
+  email: string;
 }

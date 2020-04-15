@@ -11,7 +11,7 @@ export type Event = {
   organizer: firestore.DocumentReference;
   location: {
     room: string;
-    place_id: string;
+    placeId: string;
     building: string;
   }
   tags: string[];
