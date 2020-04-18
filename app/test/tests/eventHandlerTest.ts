@@ -1,7 +1,7 @@
 import * as eventHandler from "../../handlers/eventHandler";
 import { firestore } from "firebase";
 import { describe } from "../testExtensions";
-import { CreateEventRequest } from "../../requestTypes";
+import { CreateEventRequest, GetEventRequest, GetEventsRequest, DeleteEventRequest } from "../../requestTypes";
 
 var MockExpressRequest = require("mock-express-request");
 var MockExpressResponse = require("mock-express-response");
@@ -10,9 +10,9 @@ var MockExpressResponse = require("mock-express-response");
 
 export async function runCreateTest(db: firestore.Firestore) {
   let mockBody: CreateEventRequest = {
-    email: "stacy@gmail.com",
-    name: "social distance please",
-    description: "hope you guys are staying healthy",
+    orgId: "stacy@gmail.com",
+    name: "barb-eve",
+    description: "eve is the best",
     startDate: new Date(),
     endDate: new Date(),
     location: {
@@ -44,7 +44,63 @@ export async function runCreateTest(db: firestore.Firestore) {
       return doc.data();
     });
     describe("Event description should be correct")
-    .expect(eventResult?.description).toBe.equalTo("hope you guys are staying healthy");
+    .expect(eventResult?.description).toBe.equalTo("eve is the best");
     describe("Event has an organizer").expect(eventResult?.organizer).is.defined();
 }
 
+
+export async function runGetTest(db: firestore.Firestore) {
+  const id = "event";
+
+  let mockBody: GetEventRequest = {
+    eventId: id
+  };
+
+  let mockRequest = new MockExpressRequest({
+    method: "GET",
+    url: "/getEvent/",
+    body: mockBody
+  });
+  let mockResponse = new MockExpressResponse();
+
+  // Simulate the app's sending of handler output to response
+  mockResponse.json(
+    await eventHandler.getEvent(db, mockRequest, mockResponse)
+  );
+
+  let mockResult = mockResponse._getJSON();
+  describe("Event name should be correct").expect(mockResult?.name).toBe.equalTo("social distance please");
+  describe("Event description should be correct").expect(mockResult?.description).toBe.equalTo("hope you guys are staying healthy");
+  describe("Event has a room").expect(mockResult?.location.room).toBe.equalTo("stay home");
+  describe("Event has an organizer").expect(mockResult?.organizer).is.defined();
+  describe("Event has no media").expect(mockResult?.media).toBe.equalTo("");
+  describe("Event tags is defined").expect(mockResult?.tags).is.defined();
+}
+
+export async function runDeleteTest(db: firestore.Firestore) {
+  let mockBody: DeleteEventRequest = {
+    eventId: "event-2",
+    orgId: ""
+  }
+
+  let mockRequest = new MockExpressRequest({
+    method: "POST",
+    url: "/deleteEvent/",
+    body: mockBody
+  });
+
+  let mockResponse = new MockExpressResponse();
+
+   // Simulate the app's sending of handler output to response
+   mockResponse.json(
+    await eventHandler.deleteEvent(db, mockRequest, mockResponse)
+  );
+
+  let docExists;
+  await db.collection("events").doc(mockRequest.body.eventId).get().then(
+    doc => {
+      docExists = doc.exists;
+    });
+  describe("Event deleted returned true").expect(mockResponse._getJSON().deleted).toBe.equalTo(true);
+  describe("Event document does not exist").expect(docExists).toBe.equalTo(false);
+}

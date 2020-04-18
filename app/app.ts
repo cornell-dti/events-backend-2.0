@@ -46,6 +46,8 @@ function shell(thisArg: any, f: Function, req: Request, res: Response, args?: an
 
 function main() {
   app.use(express.json());
+  
+  // User
   app.get('/', (req: Request, res: Response) => shell(undefined, (dbv: any, reqv: Request, resv: Response) => { resv.json({ "test": "up!" }) }, req, res, [db, req, res]));
   app.get('/logs/', (req: Request, res: Response) => shell(Logger, Logger.getLogs, req, res, [db, req, res]));
   app.post('/createUser/', (req: Request, res: Response) => shell(userHandler, userHandler.createUser, req, res, [db, req, res]));
@@ -54,8 +56,11 @@ function main() {
 
   // Events
   app.post('/createEvent/',(req: Request, res: Response) => shell(eventHandler, eventHandler.createEvent, req, res, [db, req, res]));
+  app.get('/getEvent/', (req: Request, res: Response) => shell(eventHandler, eventHandler.getEvent, req, res, [db, req, res]));
+  app.get('/getEvents/', (req: Request, res: Response) => shell(eventHandler, eventHandler.getEvents, req, res, [db, req, res]));
+  app.get('/deleteEvent/', (req: Request, res: Response) => shell(eventHandler, eventHandler.deleteEvent, req, res, [db, req, res]));
 
-  
+
   app.listen(port, () => console.log(`Backend running on http://localhost:${port}`))
 }
 main();

@@ -16,7 +16,7 @@ export type GetUserRequest = {
 
 // when do you put question mark when its optional?
 export type CreateEventRequest = {
-  email: string;
+  orgId: string;
   name: string;
   description: string;
   startDate: Date;
@@ -35,9 +35,11 @@ export type GetEventRequest = {
 }
 
 export type GetEventsRequest = {
-  email: string;
+  orgId: string;
 }
+
+// Do I need to verify the org deleting?
 export type DeleteEventRequest = {
-  id: string;
-  email: string;
+  eventId: string;
+  orgId: string;
 }
