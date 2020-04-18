@@ -36,9 +36,8 @@ export async function runCreateTest(db: firestore.Firestore) {
   );
 
   // Check actual Firebase data
-  let eventResult = await db
-    .collection("events")
-    .doc('event').get()
+  let mockResult = mockResponse._getJSON();
+  let eventResult = await db.collection("events").doc(mockResult.eventId).get()
     .then(doc => {
       describe("Expect event to exist").expect(doc.exists).toBe.equalTo(true);
       return doc.data();
@@ -77,6 +76,28 @@ export async function runGetTest(db: firestore.Firestore) {
   describe("Event tags is defined").expect(mockResult?.tags).is.defined();
 }
 
+// export async function runGetTest(db: firestore.Firestore) {
+//   let mockBody: GetEventsRequest = {
+//     orgId: "stacy@gmail.com"
+//   };
+
+//   let mockRequest = new MockExpressRequest({
+//     method: "GET",
+//     url: "/getEvents/",
+//     body: mockBody
+//   });
+
+//   let mockResponse = new MockExpressResponse();
+
+//   // Simulate the app's sending of handler output to response
+//   mockResponse.json(
+//     await eventHandler.getEvents(db, mockRequest, mockResponse)
+//   );
+
+//   let mockResult = mockResponse._getJSON();
+//   describe("Number of events should be the same").expect(Object.keys( mockResult ).length).toBe.equalTo("social distance please");
+// }
+
 export async function runDeleteTest(db: firestore.Firestore) {
   let mockBody: DeleteEventRequest = {
     eventId: "event-2",
@@ -92,7 +113,7 @@ export async function runDeleteTest(db: firestore.Firestore) {
   let mockResponse = new MockExpressResponse();
 
    // Simulate the app's sending of handler output to response
-   mockResponse.json(
+  mockResponse.json(
     await eventHandler.deleteEvent(db, mockRequest, mockResponse)
   );
 
@@ -104,3 +125,4 @@ export async function runDeleteTest(db: firestore.Firestore) {
   describe("Event deleted returned true").expect(mockResponse._getJSON().deleted).toBe.equalTo(true);
   describe("Event document does not exist").expect(docExists).toBe.equalTo(false);
 }
+

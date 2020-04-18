@@ -29,9 +29,7 @@ export async function createEvent(db: firestore.Firestore, req: Request, res:Res
   let eventRef : firestore.DocumentReference = db.collection('events').doc();
   return eventRef.set(event).then(
     async doc => {
-      // const eventDoc = doc;
-      // return { eventID : eventDoc.id };
-      return "Event successfully created!";
+      return { eventId : eventRef.id };
     }).catch(
     async error => {
      return { error : error} ;
@@ -58,16 +56,19 @@ export async function getEvent(db: firestore.Firestore, req: Request, res: Respo
 export async function getEvents(db: firestore.Firestore, req: Request, res: Response): Promise<any> {
   let request = req.body as GetEventsRequest;
   let orgId = request.orgId;
-  let orgDocRef = db.collection('organizations').doc(orgId); // check to ensure that there is an email for it?
+  let orgDocRef = db.collection('users').doc(orgId); // check to ensure that there is an email for it?
   return db.collection('events').where("organizer", "==", orgDocRef).get().then(
     async (eventSnapshot) => {
       if (eventSnapshot.empty) {
         console.log('There are no events for this organization'); // do not throw an error?
+      } else {
+        //var docs = eventSnapshot.docs.map(doc => doc.data());
+        return materialize(eventSnapshot);
+        //return JSON.stringify(docs);
       }
-      return materialize(eventSnapshot);
+      return "NO EVENTS";
   })
   .catch(error => {
-    console.log('Error fetching events: ', error);
     return { error: error }; 
   });
 }
