@@ -56,16 +56,15 @@ export async function getEvent(db: firestore.Firestore, req: Request, res: Respo
 export async function getEvents(db: firestore.Firestore, req: Request, res: Response): Promise<any> {
   let request = req.body as GetEventsRequest;
   let orgId = request.orgId;
-  let orgDocRef = db.collection('users').doc(orgId); // check to ensure that there is an email for it?
+  let orgDocRef = db.collection('organizations').doc(orgId); // check to ensure that there is an email for it?
   return db.collection('events').where("organizer", "==", orgDocRef).get().then(
     async (eventSnapshot) => {
       if (eventSnapshot.empty) {
-        console.log('There are no events for this organization'); // do not throw an error?
+        return "There are no events for this organization";
       } else {
         const docs = eventSnapshot.docs.map(doc => materialize(doc.data()));
         return Promise.all(docs);
       }
-      return "NO EVENTS";
   })
   .catch(error => {
     return { error: error }; 

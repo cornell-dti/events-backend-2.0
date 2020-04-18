@@ -49,10 +49,8 @@ export async function runCreateTest(db: firestore.Firestore) {
 
 
 export async function runGetTest(db: firestore.Firestore) {
-  const id = "event";
-
   let mockBody: GetEventRequest = {
-    eventId: id
+    eventId: "event"
   };
 
   let mockRequest = new MockExpressRequest({
@@ -95,7 +93,7 @@ export async function runGetTest(db: firestore.Firestore) {
 //   );
 
 //   let mockResult = mockResponse._getJSON();
-//   describe("Number of events should be the same").expect(Object.keys( mockResult ).length).toBe.equalTo("social distance please");
+//   describe("There are events associated with this email").expect(mockResult).is.defined();
 // }
 
 export async function runDeleteTest(db: firestore.Firestore) {
@@ -105,7 +103,7 @@ export async function runDeleteTest(db: firestore.Firestore) {
   }
 
   let mockRequest = new MockExpressRequest({
-    method: "POST",
+    method: "DELETE",
     url: "/deleteEvent/",
     body: mockBody
   });
