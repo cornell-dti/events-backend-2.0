@@ -6,6 +6,7 @@ import { Express } from "express";
 import * as Logger from "./logging/logger";
 // import * as handler from "./handler";
 import * as userHandler from "./handlers/userHandler";
+import * as orgHandler from "./handlers/orgHandler";
 import { db } from "./util/firebase"
 
 // Express ---------------------------------------------------------------------
@@ -47,9 +48,14 @@ function main() {
   app.use(express.json());
   app.get('/', (req: Request, res: Response) => shell(undefined, (dbv: any, reqv: Request, resv: Response) => { resv.json({ "test": "up!" }) }, req, res, [db, req, res]));
   app.get('/logs/', (req: Request, res: Response) => shell(Logger, Logger.getLogs, req, res, [db, req, res]));
+
   app.post('/createUser/', (req: Request, res: Response) => shell(userHandler, userHandler.createUser, req, res, [db, req, res]));
   app.get('/getUser/', (req: Request, res: Response) => shell(userHandler, userHandler.getUser, req, res, [db, req, res]));
   app.delete('/deleteUser/', (req: Request, res: Response) => shell(userHandler, userHandler.deleteUser, req, res, [db, req, res]));
+
+  app.post('/createOrg/', (req: Request, res: Response) => shell(userHandler, orgHandler.createOrg, req, res, [db, req, res]));
+  app.get('/getOrg/', (req: Request, res: Response) => shell(userHandler, orgHandler.getOrg, req, res, [db, req, res]));
+  app.post('/updateOrg/:orgID', (req: Request, res: Response) => shell(userHandler, orgHandler.updateOrg, req, res, [db, req, res]));
 
   app.listen(port, () => console.log(`Backend running on http://localhost:${port}`))
 }
