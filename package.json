@@ -52,5 +52,6 @@
   "devDependencies": {},
   "engines": {
     "node": "12.x"
-  }
+  },
+  "files":["types.d.ts"]
 }

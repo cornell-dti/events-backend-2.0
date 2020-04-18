@@ -8,6 +8,7 @@ import * as Logger from "./logging/logger";
 import * as userHandler from "./handlers/userHandler";
 import * as orgHandler from "./handlers/orgHandler";
 import { db } from "./util/firebase"
+import { authenticate } from "./auth";
 
 // Express ---------------------------------------------------------------------
 const express = require('express');
