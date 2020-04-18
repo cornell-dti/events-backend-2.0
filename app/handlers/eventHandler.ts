@@ -62,9 +62,8 @@ export async function getEvents(db: firestore.Firestore, req: Request, res: Resp
       if (eventSnapshot.empty) {
         console.log('There are no events for this organization'); // do not throw an error?
       } else {
-        //var docs = eventSnapshot.docs.map(doc => doc.data());
-        return materialize(eventSnapshot);
-        //return JSON.stringify(docs);
+        const docs = eventSnapshot.docs.map(doc => materialize(doc.data()));
+        return Promise.all(docs);
       }
       return "NO EVENTS";
   })
