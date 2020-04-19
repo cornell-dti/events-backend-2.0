@@ -4,37 +4,10 @@ const chalk = require('chalk');
 var fs = require('fs');
 import * as express from "express";
 import * as socketio from "socket.io";
-import {Express} from "express";
+import { Express } from "express";
 import * as path from "path";
+import { db } from "../util/firebase"
 const eventBus = require('js-event-bus')();
-
-// Read .env file --------------------------------------------------------------
-const dotenv = require('dotenv').config();
-// -----------------------------------------------------------------------------
-
-// Firebase --------------------------------------------------------------------
-let admin = require('firebase-admin');
-let serviceAccount = require('../../secrets/eventsbackenddatabase-firebase-adminsdk-ukak2-d1b3a5ef55.json');
-function updateServiceAccountWithSecrets() {
-  serviceAccount["private_key_id"] = process.env.PK_ID ? process.env.PK_ID : "null";
-  if (serviceAccount["private_key_id"] == "null" || !serviceAccount["private_key_id"]) {
-    console.log("ERROR: No PK_ID in .env, pk val is: " + serviceAccount["private_key_id"]);
-    throw new Error("No PK_ID in .env");
-  }
-  serviceAccount["private_key"] = process.env.PK_PWD ? process.env.PK_PWD : "null";
-  if (serviceAccount["private_key"] == "null" || !serviceAccount["private_key"]) {
-    console.log("ERROR: No PK_PWD in .env, pk_pwd val is: " + serviceAccount["private_key"]);
-    throw new Error("No PK_PWD in .env");
-  }
-}
-updateServiceAccountWithSecrets();
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://eventsbackenddatabase.firebaseio.com"
-});
-let db = admin.firestore();
-// -----------------------------------------------------------------------------
 
 let FgRed = "\x1b[31m"
 let FgGreen = "\x1b[32m"
@@ -102,24 +75,24 @@ let singleRunPromChain: Promise<any> | undefined = undefined;
 
 let serverStarted = false;
 
-function startServer(){
+function startServer() {
   const express = require('express');
   const app: Express = express();
   let http = require("http").Server(app);
-// set up socket.io and bind it to our
-// http server.
+  // set up socket.io and bind it to our
+  // http server.
   let io = require("socket.io")(http);
-  io.on('connection', function(socket: any){
+  io.on('connection', function (socket: any) {
     socket.on('requestFullRerun', function () {
       start(false).then(() => {
         socket.emit('currentTests', testResults);
       });
     });
-    socket.on('requestRerun', function(request:string){
+    socket.on('requestRerun', function (request: string) {
       let reqSplits = request.split(";;");
       let cInd = Number(reqSplits[0]);
       let tInd = Number(reqSplits[1]);
-      if(singleRunPromChain == undefined){
+      if (singleRunPromChain == undefined) {
         singleRunPromChain = runOneTest(cInd, tInd).then((val) => {
           socket.emit('rerunResult', testResults[cInd][tInd]);
         });
@@ -131,14 +104,14 @@ function startServer(){
         });
       }
     });
-    socket.on('initConnect', function(connection:any){
+    socket.on('initConnect', function (connection: any) {
       socket.emit('currentTests', testResults);
       eventBus.on('singleTestFinish', function () {
         socket.emit('singleTestFinish', testResults[classIndex][testIndex]);
       })
     });
   });
-  const server = http.listen(9909, function() {
+  const server = http.listen(9909, function () {
     console.log("test-suite backend listening on *:9909");
   });
   serverStarted = true;
@@ -150,21 +123,21 @@ let getMethods = (obj: any) => Object.getOwnPropertyNames(obj).filter(item => ty
 async function start(doTerminalLogging: boolean) {
   doTestLog = doTerminalLogging;
   doTestSetup();
-  if(!doTerminalLogging){
-    if(!serverStarted){
+  if (!doTerminalLogging) {
+    if (!serverStarted) {
       startServer();
     }
   }
   await runTest();
 }
 
-function requireUncached(module:any){
+function requireUncached(module: any) {
   delete require.cache[require.resolve(module)];
   require(module);
   return require(module);
 }
 
-export function doTestSetup(){
+export function doTestSetup() {
   testsOver = false;
   testClasses = [];
   testClassTests = [];
@@ -190,15 +163,15 @@ export function doTestSetup(){
       testClassNames.push(files[i]);
     }
   }
-  for(let n = 0; n < testClasses.length; n++){
+  for (let n = 0; n < testClasses.length; n++) {
     testResults.push([]);
-    for(let x = 0; x < testClassTests[n].length; x++){
-      testResults[n].push({ hasRun: false, expectations: [], testClass: testClasses[n], testClassName: testClassNames[n], testFuncName: testClassTests[n][x].name, passed: true, cInd: n, tInd: x});
+    for (let x = 0; x < testClassTests[n].length; x++) {
+      testResults[n].push({ hasRun: false, expectations: [], testClass: testClasses[n], testClassName: testClassNames[n], testFuncName: testClassTests[n][x].name, passed: true, cInd: n, tInd: x });
     }
   }
 }
 
-function reimportHandlers(){
+function reimportHandlers() {
   let files2 = fs.readdirSync(path.resolve('./app/handlers/'));
   for (let i = 0; i < files2.length; i++) {
     let imported = requireUncached(path.resolve('./app/handlers/') + '/' + files2[i].replace(".ts", ""));
@@ -243,7 +216,7 @@ async function runOneTest(cInd: number, tInd: number) {
   restrainedLog("│ " + chalk.cyan("Module") + ": " + chalk.yellow(testClassNames[classIndex]));
   restrainedLog("│ " + chalk.cyan("Running test") + ": " + chalk.magenta(currentlyRunningTest.name));
   restrainedLog("│");
-  return currentlyRunningTest.apply(null, [db]).then(() => {testsOver = true;});
+  return currentlyRunningTest.apply(null, [db]).then(() => { testsOver = true; });
 }
 
 function nextTest() {
