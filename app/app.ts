@@ -11,7 +11,7 @@ import * as Logger from "./logging/logger";
 // import * as handler from "./handler";
 import * as userHandler from "./handlers/userHandler";
 import uuid from "uuid";
-//custom test gary
+
 // Express ---------------------------------------------------------------------
 const express = require('express');
 const app: Express = express()
