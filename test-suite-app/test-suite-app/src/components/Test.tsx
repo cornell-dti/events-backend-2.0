@@ -4,6 +4,9 @@ import {Internet} from "../util/Internet";
 import {Button, Card, CardContent, IconButton, Typography} from "@material-ui/core";
 import {ExpectationComponent} from "./ExpectationComponent";
 import {ArrowDropDown, ArrowRight} from "@material-ui/icons";
+import {Colors} from "../util/Colors";
+import {SoftDiv} from "./SoftDiv";
+import {Preferences} from "../util/Preferences";
 
 export type TestProps = {
     endpoint: string,
@@ -52,29 +55,58 @@ export class Test extends Component<TestProps> {
         }
         let dropDownIcon = !this.testsAreOpen ? <ArrowRight/> : <ArrowDropDown />;
         let passColor = !this.props.testResult.hasRun ? 'orange' : (this.props.testResult.passed ? 'green' : 'red');
-        return (<Card style={{ minWidth: '40vw', maxWidth: '40vw', margin: '1em', height: "fit-content" }}>
-            <CardContent>
-                <Typography style={{ ...leftAlign, ...testFuncStyling }} variant="h5" component="h2">
-                    {this.props.testResult.testFuncName}
-                </Typography>
-                <div style={{ ...brStyle1 }}/>
-                <Typography style={{ ...leftAlign }} color="textSecondary" gutterBottom>
-                    {this.props.testResult.testClassName}
-                </Typography>
-                <div style={{ ...brStyle2 }}/>
-                <Typography style={{ ...leftAlign, ...passStyling, color: passColor }} color="textSecondary">
-                    {!this.props.testResult.hasRun ? "Running" : (this.props.testResult.passed ? "Passed" : "FAILED")}
-                </Typography>
-                <div style={{ ...brStyle3 }}/>
-                <Button style={{ ...leftAlign, color: 'black', background: '#f7f7f7' }} size="large" onClick={this.requestRerun()}>Re-run</Button>
-                <Button style={{ ...leftAlign, marginLeft: '1em', color: 'black', background: '#f7f7f7' }} size="large" onClick={this.logTest()}>Log Test</Button>
-                <IconButton style={{ float: 'right', marginTop: '-0.15em', marginBottom: '0em' }} onClick={this.toggleOpenTests()}>
-                    { dropDownIcon }
-                </IconButton>
-                <div style={{ maxHeight: '30vh', width: '100%', overflowY: 'scroll', marginLeft:'0em' }}>
-                    { [expectationsHTML] }
-                </div>
-            </CardContent>
-        </Card>)
+        if(Preferences.cardStyle == "material"){
+            return (<Card style={{ minWidth: '40vw', maxWidth: '40vw', margin: '1em', height: "fit-content" }}>
+                <CardContent>
+                    <Typography style={{ ...leftAlign, ...testFuncStyling }} variant="h5" component="h2">
+                        {this.props.testResult.testFuncName}
+                    </Typography>
+                    <div style={{ ...brStyle1 }}/>
+                    <Typography style={{ ...leftAlign }} color="textSecondary" gutterBottom>
+                        {this.props.testResult.testClassName}
+                    </Typography>
+                    <div style={{ ...brStyle2 }}/>
+                    <Typography style={{ ...leftAlign, ...passStyling, color: passColor }} color="textSecondary">
+                        {!this.props.testResult.hasRun ? "Running" : (this.props.testResult.passed ? "Passed" : "FAILED")}
+                    </Typography>
+                    <div style={{ ...brStyle3 }}/>
+                    <Button style={{ ...leftAlign, color: Colors.testButtonTextColor ? Colors.testButtonTextColor : 'black', background: Colors.testButtonColor }} size="large" onClick={this.requestRerun()}>Re-run</Button>
+                    <Button style={{ ...leftAlign, marginLeft: '1em', color: Colors.testButtonTextColor ? Colors.testButtonTextColor : 'black', background: Colors.testButtonColor }} size="large" onClick={this.logTest()}>Log Test</Button>
+                    <IconButton style={{ float: 'right', marginTop: '-0.15em', marginBottom: '0em' }} onClick={this.toggleOpenTests()}>
+                        { dropDownIcon }
+                    </IconButton>
+                    <div style={{ maxHeight: '30vh', width: '100%', overflowY: 'scroll', marginLeft:'0em' }}>
+                        { [expectationsHTML] }
+                    </div>
+                </CardContent>
+            </Card>);
+        } else {
+            return (
+                <SoftDiv onClick={()=>{}} msAnimationTime={200} onBackgroundHex={Colors.background} style={{ minWidth: '40vw', maxWidth: '40vw', padding: '0.01em', marginTop: '1em', marginBottom: '1em', marginLeft: '1em' }}>
+                    <CardContent style={{ width:'100%' }}>
+                        <Typography style={{ ...leftAlign, ...testFuncStyling, color: 'black' }} variant="h5" component="h2">
+                            {this.props.testResult.testFuncName}
+                        </Typography>
+                        <div style={{ ...brStyle1 }}/>
+                        <Typography style={{ ...leftAlign }} color="textSecondary" gutterBottom>
+                            {this.props.testResult.testClassName}
+                        </Typography>
+                        <div style={{ ...brStyle2 }}/>
+                        <Typography style={{ ...leftAlign, ...passStyling, color: passColor }} color="textSecondary">
+                            {!this.props.testResult.hasRun ? "Running" : (this.props.testResult.passed ? "Passed" : "FAILED")}
+                        </Typography>
+                        <div style={{ ...brStyle3 }}/>
+                        <Button style={{ ...leftAlign, color: Colors.testButtonTextColor ? Colors.testButtonTextColor : 'black', background: Colors.testButtonColor }} size="large" onClick={this.requestRerun()}>Re-run</Button>
+                        <Button style={{ ...leftAlign, marginLeft: '1em', color: Colors.testButtonTextColor ? Colors.testButtonTextColor : 'black', background: Colors.testButtonColor }} size="large" onClick={this.logTest()}>Log Test</Button>
+                        <IconButton style={{ float: 'right', marginTop: '-0.15em', marginBottom: '0em' }} onClick={this.toggleOpenTests()}>
+                            { dropDownIcon }
+                        </IconButton>
+                        <div style={{ maxHeight: '30vh', width: '100%', overflowY: 'scroll', marginLeft:'0em' }}>
+                            { [expectationsHTML] }
+                        </div>
+                    </CardContent>
+                </SoftDiv>
+            )
+        }
     }
 }

@@ -2,7 +2,12 @@ import React, { Component } from 'react';
 import {TestClass} from "./TestClass";
 import {TestResult} from "../Types";
 import {Internet} from "../util/Internet";
-import {Button} from "@material-ui/core";
+import {SoftDiv} from "./SoftDiv";
+import {ThemeManager} from "../util/ThemeManager";
+import {ArrowRight} from "@material-ui/icons";
+import {Icons} from "../util/Icons";
+import {Preferences} from "../util/Preferences";
+import {Colors} from "../util/Colors";
 
 type TestGroupState = {
     testResults: TestResult[][];
@@ -13,8 +18,9 @@ type TestGroupProps = {
 }
 
 
-const expand: React.CSSProperties = { width: '100%', height: '100%' };
+const expand: React.CSSProperties = { width: '100%', height: '100%', minHeight: '100vh' };
 const leftAlign: React.CSSProperties = { textAlign: 'left', float: 'left'};
+const brStyle1: React.CSSProperties = { display: 'block', marginTop: '0.7em' };
 
 export class TestGroup extends Component<TestGroupProps, TestGroupState> {
 
@@ -56,15 +62,34 @@ export class TestGroup extends Component<TestGroupProps, TestGroupState> {
     render() {
         if(this.state !== null && (this.state as TestGroupState).testResults){
             let testsClassesHTML = [];
-            testsClassesHTML.push(<div style={{ display: "block", height: '5em' }}></div>);
             for(let i = 0; i < (this.state as TestGroupState).testResults.length; i++){
                 let testClassResults: TestResult[] = (this.state as TestGroupState).testResults[i];
-                testsClassesHTML.push(<hr style={{ width: '95vw', borderColor: '#f7f7f7' }}/>);
+                testsClassesHTML.push(
+                        <SoftDiv impressedByDefault={true} colorHex={Colors.background} style={{ marginLeft: '2.5vw', marginRight: '2.5vw' }} width={"95vw"} height={"2em"} text={" "}/>
+                    );
                 testsClassesHTML.push(<TestClass testResults={testClassResults} endpoint={this.props.endpoint}/>);
+                if(i == this.state.testResults.length - 1){
+                    testsClassesHTML.push(
+                        <SoftDiv impressedByDefault={true} colorHex={Colors.background} style={{ marginLeft: '2.5vw', marginRight: '2.5vw' }} width={"95vw"} height={"2em"} text={" "}/>
+                    );
+                }
             }
-            return <div style={{...expand, background: '#f7f7f7' }}>
-                <Button style={{ ...leftAlign, fontWeight: 'bold', marginLeft: '2.5em', marginBottom: '-1em', marginTop: '1.5em', color: 'white', background: '#D3D3D3' }} size="large" onClick={this.doFullRerun()}>Re-run All Tests</Button>
-                {testsClassesHTML}
+            return <div style={{...expand, background: Colors.background }}>
+                <br/>
+                <div style={{ ...brStyle1 }}/>
+                {/*<Button style={{ ...leftAlign, fontWeight: 'bold', marginLeft: '2.5em', marginBottom: '-1em', marginTop: '1.5em', color: 'white', background: '#D3D3D3' }} size="large" onClick={this.doFullRerun()}>Re-run All Tests</Button>*/}
+                <div style={{ display: 'flex', flexDirection: "row" }}>
+                    <SoftDiv borderRadius={"10em"} style={{ marginLeft: '2em', marginBottom: '2em' }} colorHex={Colors.background} onClick={this.doFullRerun()} height="5em" width="5em">
+                        { Icons.getPlayIcon('3em', '3em') }
+                    </SoftDiv>
+                    <SoftDiv borderRadius={"10em"} style={{ marginLeft: '2em', marginBottom: '2em' }} colorHex={Colors.background} onClick={()=>{ThemeManager.cycleColorTheme(); this.forceUpdate();}} changesTheme={true} height="5em" width="5em">
+                        { Icons.getRerunAllIcon('3em', '3em') }
+                    </SoftDiv>
+                    <SoftDiv borderRadius={"10em"} style={{ marginLeft: '2em', marginBottom: '2em' }} colorHex={Colors.background} onClick={() => {if(Preferences.cardStyle == "soft"){Preferences.cardStyle = "material"}else{Preferences.cardStyle = "soft"} this.forceUpdate()}} height="5em" width="5em">
+                        { Icons.getChangeCardStyleIcon('3em', '3em') }
+                    </SoftDiv>
+                </div>
+                {[testsClassesHTML]}
             </div>;
         } else {
             return <div style={{...expand}}>
