@@ -7,7 +7,6 @@ var MockExpressRequest = require("mock-express-request");
 var MockExpressResponse = require("mock-express-response");
 
 // BEGIN TESTS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 export async function runCreateTest(db: firestore.Firestore) {
   let mockBody: CreateEventRequest = {
     orgId: "stacy@gmail.com",
@@ -47,7 +46,7 @@ export async function runCreateTest(db: firestore.Firestore) {
     describe("Event has an organizer").expect(eventResult?.organizer).is.defined();
 }
 
-
+// Get Event Test
 export async function runGetTest(db: firestore.Firestore) {
   let mockBody: GetEventRequest = {
     eventId: "event"
@@ -73,7 +72,7 @@ export async function runGetTest(db: firestore.Firestore) {
   describe("Event has no media").expect(mockResult?.media).toBe.equalTo("");
   describe("Event tags is defined").expect(mockResult?.tags).is.defined();
 }
-
+// Get All Events for an Organization Test
 // export async function runGetTest(db: firestore.Firestore) {
 //   let mockBody: GetEventsRequest = {
 //     orgId: "stacy@gmail.com"
