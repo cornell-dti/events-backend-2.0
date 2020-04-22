@@ -7,6 +7,7 @@ import * as Logger from "./logging/logger";
 // import * as handler from "./handler";
 import * as userHandler from "./handlers/userHandler";
 import * as eventHandler from "./handlers/eventHandler";
+import * as orgHandler from "./handlers/orgHandler";
 import { db } from "./util/firebase"
 
 // Express ---------------------------------------------------------------------
@@ -59,8 +60,13 @@ function main() {
   app.get('/getEvents/', (req: Request, res: Response) => shell(eventHandler, eventHandler.getEvents, req, res, [db, req, res]));
   app.delete('/deleteEvent/', (req: Request, res: Response) => shell(eventHandler, eventHandler.deleteEvent, req, res, [db, req, res]));
 
+  // Orgs
+  app.post('/createOrg/',(req: Request, res: Response) => shell(orgHandler, orgHandler.createOrg, req, res, [db, req, res]));
+  app.get('/getOrg/', (req: Request, res: Response) => shell(orgHandler, orgHandler.getOrg, req, res, [db, req, res]));
+  app.get('/updateOrg/', (req: Request, res: Response) => shell(orgHandler, orgHandler.updateOrg, req, res, [db, req, res]));
+  app.get('/getAllOrgs/', (req: Request, res: Response) => shell(orgHandler, orgHandler.getAllOrgs, req, res, [db, req, res]));
+  
 
   app.listen(port, () => console.log(`Backend running on http://localhost:${port}`))
 }
 main();
-

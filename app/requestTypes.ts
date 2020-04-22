@@ -22,6 +22,7 @@ export type UpdateOrgRequest = {
   website: string;
   email: string;
   media: string;
+  tags: string[];
 }
 
 export interface CreateOrgRequest extends UpdateOrgRequest {
@@ -30,8 +31,16 @@ export interface CreateOrgRequest extends UpdateOrgRequest {
 
 export type GetOrgRequest = {
   id: string;
+  // since we are using uid instead of email for orgs
+  // when we fire get ORG how can we know the uid before hand
+  // won't we have to query the name field of every documen?
 }
 
+export type GetAllOrgsRequest = {
+  id:string;
+  // id should be the name of the collection
+  // which in this case is organizations
+}
 export type EventRequest = {
   uuid: string;
 }

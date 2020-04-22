@@ -25,6 +25,9 @@ export type Org = {
   email: string;
   media: string;
   orgUser: firestore.DocumentReference;
+  tags: string[];
+  // do we not need org tags?
+  // should we also include useremail here?
 }
 
 export type UserInfo = {
