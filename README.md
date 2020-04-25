@@ -56,4 +56,6 @@ To do this, simply run:
 <code>npm test</code>
 
 #### Contributors
-2019 - Jagger Brulato (architecture, test suite, Logger, DevOps)
+2019, 2020 - Jagger Brulato (architecture, test suite, Logger, DevOps)
+
+2020 - Enoch Chen
