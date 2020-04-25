@@ -1,13 +1,13 @@
 import { Request, Response } from "express-serve-static-core";
 import { firestore } from "firebase";
 import { Event, Org, UserInfo } from "../types"
-import { CreateEventRequest, GetEventRequest, GetEventsRequest, DeleteEventRequest } from "../requestTypes";
+import { CreateEventRequest, EditEventRequest, GetEventRequest, GetEventsRequest, DeleteEventRequest } from "../requestTypes";
 import { materialize } from "../util/commonOps";
 import { auth } from '../util/firebase';
 
 export async function createEvent(db: firestore.Firestore, req: Request, res:Response): Promise<any> {
   let request = req.body as CreateEventRequest;
-  let id = request.orgId.toLowerCase();
+  let id = request.orgId;
   let orgRef: firestore.DocumentReference = db.collection('organizations').doc(id);
 
   let event: Event = {
@@ -35,6 +35,23 @@ export async function createEvent(db: firestore.Firestore, req: Request, res:Res
      return { error : error} ;
     });
 }
+
+// Must Pass In The Whole Event Or Pass In Whole Location if Changed
+export async function editEvent(db: firestore.Firestore, req: Request, res: Response): Promise<any> {
+  let request = req.body as EditEventRequest;
+  let event_id = request.eventId;
+  let eventDocRef = db.collection('events').doc(event_id);
+  return eventDocRef.get().then( doc => {
+    if (!doc.exists) {
+      throw `Event with id: ${event_id} not found!`;
+    }
+    return eventDocRef.update(request.event);
+  })
+  .catch(error => {
+    console.log('Error editing event: ', error);
+    return { error: error };
+  })
+} 
 
 
 export async function getEvent(db: firestore.Firestore, req: Request, res: Response): Promise<any> {
