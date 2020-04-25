@@ -45,7 +45,9 @@ export async function editEvent(db: firestore.Firestore, req: Request, res: Resp
     if (!doc.exists) {
       throw `Event with id: ${event_id} not found!`;
     }
-    return eventDocRef.update(request.event);
+    return eventDocRef.update(request.event).then(function() {
+      return request.event;
+    });
   })
   .catch(error => {
     console.log('Error editing event: ', error);
