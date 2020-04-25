@@ -27,19 +27,19 @@ function shell(thisArg: any, f: Function, req: Request, res: Response, args?: an
   if (req.url.toLowerCase() !== "/logs/") {
     promise.then((val) => {
       Logger.doLog(val, true, thisArg, f, req, res, args);
-      res.status(400).json(val);
+      res.status(200).json(val);
     }).catch((reason) => {
       let error = { "error": "Promise rejected for: " + reason };
       Logger.doLog(error, false, thisArg, f, req, res, args);
-      res.status(200).json(error);
+      res.status(400).json(error);
     });
   } else {
     Logger.doLog(null, true, thisArg, f, req, res, args);
     promise.then((val) => {
-      res.status(400).send(val);
+      res.status(200).send(val);
     }).catch((reason) => {
       let error = { "error": "Promise rejected for: " + reason };
-      res.status(200).json(error);
+      res.status(400).json(error);
     });
   }
 }
