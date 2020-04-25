@@ -32,15 +32,7 @@ const shell = async (
     res.status(401).json(eve_pk_json);
     return;
   }
-  if (checkAuth) {
-    try {
-      [req, res] = await authenticate(req, res);
-    } catch (e) {
-      let error = { error: `Authentication error: ${e}` }
-      res.status(400).json(error);
-      return;
-    }
-  }
+  [req, res] = await authenticate(req, res);
   let promise: Promise<any> = f.apply(thisArg, args);
   if (req.url.toLowerCase() !== "/logs/") {
     promise
@@ -91,7 +83,7 @@ function main() {
     shell(userHandler, userHandler.getUser, false, req, res, [db, req, res])
   );
   app.delete("/deleteUser/", (req, res) =>
-    shell(userHandler, userHandler.deleteUser, false, req, res, [db, req, res])
+    shell(userHandler, userHandler.deleteUser, true, req, res, [db, req, res])
   );
 
   app.post("/createOrg/", (req, res) =>
