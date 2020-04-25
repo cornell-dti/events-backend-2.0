@@ -1,8 +1,8 @@
 import admin from "firebase-admin";
 
-declare global {
+declare module "express-serve-static-core" {
   export interface Request {
-    authInfo: admin.auth.DecodedIdToken;
+    authInfo ?: admin.auth.DecodedIdToken;
   }
   export interface Response {}
 }
