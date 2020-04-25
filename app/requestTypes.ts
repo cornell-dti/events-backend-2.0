@@ -74,3 +74,11 @@ export type DeleteEventRequest = {
   eventId: string;
   orgId: string;
 }
+
+export type IncrementAttendanceRequest = {
+  eventId: string;
+}
+
+export type DecrementAttendanceRequest = {
+  eventId: string;
+}

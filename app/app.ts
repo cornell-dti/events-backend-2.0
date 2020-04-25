@@ -55,10 +55,14 @@ function main() {
   app.delete('/deleteUser/', (req: Request, res: Response) => shell(userHandler, userHandler.deleteUser, req, res, [db, req, res]));
 
   // Events
-  app.post('/createEvent/',(req: Request, res: Response) => shell(eventHandler, eventHandler.createEvent, req, res, [db, req, res]));
+  app.post('/createEvent/', (req: Request, res: Response) => shell(eventHandler, eventHandler.createEvent, req, res, [db, req, res]));
   app.get('/getEvent/', (req: Request, res: Response) => shell(eventHandler, eventHandler.getEvent, req, res, [db, req, res]));
   app.get('/getEvents/', (req: Request, res: Response) => shell(eventHandler, eventHandler.getEvents, req, res, [db, req, res]));
   app.delete('/deleteEvent/', (req: Request, res: Response) => shell(eventHandler, eventHandler.deleteEvent, req, res, [db, req, res]));
+
+  // Attendance in Events
+  app.get('/incrementAttendance/', (req: Request, res: Response) => shell(eventHandler, eventHandler.incrementAttendance, req, res, [db, req, res]));
+  app.get('/decrementAttendance/', (req: Request, res: Response) => shell(eventHandler, eventHandler.decrementAttendance, req, res, [db, req, res]));
 
   // Orgs
   app.post('/createOrg/',(req: Request, res: Response) => shell(orgHandler, orgHandler.createOrg, req, res, [db, req, res]));
