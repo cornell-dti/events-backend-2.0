@@ -1,9 +1,10 @@
 import { Request, Response } from "express-serve-static-core";
 import { firestore } from "firebase";
 import { Event, Org, UserInfo } from "../types"
-import { CreateEventRequest, GetEventRequest, GetEventsRequest, DeleteEventRequest } from "../requestTypes";
+import { CreateEventRequest, GetEventRequest, GetEventsRequest, DeleteEventRequest, IncrementAttendanceRequest, DecrementAttendanceRequest } from "../requestTypes";
 import { materialize } from "../util/commonOps";
 import { auth } from '../util/firebase';
+import admin from "firebase-admin";
 
 export async function createEvent(db: firestore.Firestore, req: Request, res:Response): Promise<any> {
   let request = req.body as CreateEventRequest;
@@ -81,5 +82,35 @@ export async function deleteEvent(db: firestore.Firestore, req: Request, res: Re
   .catch(error => {
     console.log("Error deleting event: ", error);
     return { error: error }; 
+  });
+}
+
+// Attendance 
+export async function incrementAttendance(db: firestore.Firestore, req: Request, res: Response): Promise<any> {
+  let request = req.body as IncrementAttendanceRequest;
+  let event_id = request.eventId;
+  let eventDocRef = db.collection('events').doc(event_id);
+
+  const a = admin.firestore.FieldValue.increment(1);
+  return eventDocRef.update({numAttendees: admin.firestore.FieldValue.increment(1)}).then(() => {
+    return {incremented: true};
+  })
+  .catch(error => {
+    console.log("Error incrementing attendence");
+    return { error: error };
+  });
+}
+
+export async function decrementAttendance(db: firestore.Firestore, req: Request, res: Response): Promise<any> {
+  let request = req.body as DecrementAttendanceRequest;
+  let event_id = request.eventId;
+  let eventDocRef = db.collection('events').doc(event_id);
+  
+  return eventDocRef.update({numAttendees: admin.firestore.FieldValue.increment(-1)}).then(() => {
+    return {decremented: true};
+  })
+  .catch(error => {
+    console.log("Error decrementing attendence");
+    return { error: error };
   });
 }
