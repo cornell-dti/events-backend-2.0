@@ -63,9 +63,9 @@ function main() {
   // Orgs
   app.post('/createOrg/',(req: Request, res: Response) => shell(orgHandler, orgHandler.createOrg, req, res, [db, req, res]));
   app.get('/getOrg/', (req: Request, res: Response) => shell(orgHandler, orgHandler.getOrg, req, res, [db, req, res]));
-  app.get('/updateOrg/', (req: Request, res: Response) => shell(orgHandler, orgHandler.updateOrg, req, res, [db, req, res]));
+  app.post('/updateOrg/', (req: Request, res: Response) => shell(orgHandler, orgHandler.updateOrg, req, res, [db, req, res]));
   app.get('/getAllOrgs/', (req: Request, res: Response) => shell(orgHandler, orgHandler.getAllOrgs, req, res, [db, req, res]));
-  
+  app.delete('/deleteOrg/', (req: Request, res: Response) => shell(orgHandler, orgHandler.deleteOrg, req, res, [db, req, res]));
 
   app.listen(port, () => console.log(`Backend running on http://localhost:${port}`))
 }

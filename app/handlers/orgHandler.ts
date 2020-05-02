@@ -3,7 +3,7 @@
 import { Request, Response } from "express-serve-static-core";
 import { firestore } from "firebase";
 import { Org } from "../types";
-import { UpdateOrgRequest, GetOrgRequest, CreateOrgRequest, GetAllOrgsRequest } from "../requestTypes";
+import { UpdateOrgRequest, GetOrgRequest, CreateOrgRequest, GetAllOrgsRequest, DeleteOrgRequest } from "../requestTypes";
 import { materialize } from "../util/commonOps";
 
 export const createOrg = async (
@@ -50,6 +50,22 @@ export const getAllOrgs = async(
 
 
 }
+
+export const deleteOrg = async (
+  db: firestore.Firestore,
+  req: Request,
+  res: Response
+): Promise<any> => {
+  let {id} = req.body as DeleteOrgRequest; 
+  let orgRef= db.collection("organizations").doc(id);
+  return orgRef.delete().then(
+    async doc =>{
+      return {status: "Org Deleted"}
+    }).catch(async error => {
+      return { error : error} ;
+     });
+
+};
 
 export const updateOrg = async (
   db: firestore.Firestore,

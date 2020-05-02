@@ -36,6 +36,10 @@ export type GetOrgRequest = {
   // won't we have to query the name field of every documen?
 }
 
+export type DeleteOrgRequest = {
+  id:string;
+}
+
 export type GetAllOrgsRequest = {
   id:string;
   // id should be the name of the collection
