@@ -102,3 +102,19 @@ export async function deleteEvent(db: firestore.Firestore, req: Request, res: Re
     return { error: error }; 
   });
 }
+
+export async function getEventFeed(db: firestore.Firestore, req: Request, res: Response): Promise<any> {
+  let currentDate = new Date();
+  return db.collection('events').where("startDate", ">=", currentDate).get().then(
+    async (eventFeedSnapshot) => {
+      if (eventFeedSnapshot.empty) {
+        return "There are no upcoming events";
+      } else {
+        const docs = eventFeedSnapshot.docs.map(doc => materialize(doc.data()));
+        return Promise.all(docs);
+      }
+  })
+  .catch(error => {
+    return { error: error }; 
+  });
+}
