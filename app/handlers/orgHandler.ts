@@ -20,7 +20,7 @@ export const createOrg = async (
   };
   const orgRef = db.collection("organizations").doc();
   return orgRef.set(org).then(
-    async doc => {
+    async () => {
       return { orgId : orgRef.id };
     }).catch(
     async error => {
@@ -35,7 +35,14 @@ export const getOrg = async (
 ): Promise<any> => {
   let { id } = req.body as GetOrgRequest;
   const orgRef = db.collection("organizations").doc(id);
-  return await orgRef.get();
+  return orgRef
+    .get()
+    .then(async (doc) => {
+      return await materialize(doc.data());
+    })
+    .catch(async (error) => {
+      return { error: error || "Unable to retrieve org" };
+    });
 };
 
 export const getAllOrgs = async(
@@ -43,11 +50,9 @@ export const getAllOrgs = async(
   req: Request,
   res: Response
 ): Promise<any> => {
-  let {id } = req.body as GetAllOrgsRequest;
-
-  const orgs_snapshot = await db.collection("organizations").get();
-  return orgs_snapshot.docs.map(org=>materialize(org.data()));
-
+  const snapshot = await db.collection("organizations").get();
+  const docs = snapshot.docs.map(doc => materialize(doc.data()));
+  return Promise.all(docs);
 
 }
 
@@ -60,9 +65,9 @@ export const deleteOrg = async (
   let orgRef= db.collection("organizations").doc(id);
   return orgRef.delete().then(
     async doc =>{
-      return {status: "Org Deleted"}
+      return {status: "Org deleted successfully"}
     }).catch(async error => {
-      return { error : error} ;
+      return { error : error  || "Unable to delete org" };
      });
 
 };
@@ -73,6 +78,13 @@ export const updateOrg = async (
   res: Response
 ): Promise<any> => {
   let request = req.body as UpdateOrgRequest;
-  const orgRef = db.collection("organizations").doc();
-  return await orgRef.update(request);
+  const orgRef = db.collection("organizations").doc(request.id);
+  return orgRef
+    .update(request)
+    .then(() => {
+      return { status: "Org updated successfully" };
+    })
+    .catch(async (error) => {
+      return { error: error || "Unable to update org" };
+    });
 };

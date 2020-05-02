@@ -17,6 +17,7 @@ export type GetUserRequest = {
 
 // Organization Requests -------------------------------------------------------
 export type UpdateOrgRequest = {
+  id: string;
   name: string;
   bio: string;
   website: string;
