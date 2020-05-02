@@ -24,7 +24,7 @@ export const createOrg = async (
       return { orgId : orgRef.id };
     }).catch(
     async error => {
-      return { error : error };
+     return { error : error} ;
     });
 };
 

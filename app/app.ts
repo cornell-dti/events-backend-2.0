@@ -36,26 +36,22 @@ const shell = async (
   [req, res] = await authenticate(req, res);
   let promise: Promise<any> = f.apply(thisArg, args);
   if (req.url.toLowerCase() !== "/logs/") {
-    promise
-      .then((val) => {
-        Logger.doLog(val, true, thisArg, f, req, res, args);
-        res.status(200).json(val);
-      })
-      .catch((reason) => {
-        let error = { error: "Promise rejected for: " + reason };
-        Logger.doLog(error, false, thisArg, f, req, res, args);
-        res.status(400).json(error);
-      });
+    promise.then((val) => {
+      Logger.doLog(val, true, thisArg, f, req, res, args);
+      res.status(200).json(val);
+    }).catch((reason) => {
+      let error = { error: "Promise rejected for: " + reason };
+      Logger.doLog(error, false, thisArg, f, req, res, args);
+      res.status(400).json(error);
+    });
   } else {
     Logger.doLog(null, true, thisArg, f, req, res, args);
-    promise
-      .then((val) => {
-        res.status(200).send(val);
-      })
-      .catch((reason) => {
-        let error = { error: "Promise rejected for: " + reason };
-        res.status(400).json(error);
-      });
+    promise.then((val) => {
+      res.status(200).send(val);
+    }).catch((reason) => {
+      let error = { "error": "Promise rejected for: " + reason };
+      res.status(400).json(error);
+    });
   }
 }
 
@@ -83,9 +79,7 @@ function main() {
     shell(orgHandler, orgHandler.updateOrg, false, req, res, [db, req, res])
   );
 
-  app.listen(port, () =>
-    console.log(`Backend running on http://localhost:${port}`)
-  );
+  app.listen(port, () => console.log(`Backend running on http://localhost:${port}`));
 }
 
 main();
