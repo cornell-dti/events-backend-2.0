@@ -11,7 +11,7 @@ export type Event = {
   organizer: firestore.DocumentReference;
   location: {
     room: string;
-    place_id: string;
+    placeId: string;
     building: string;
   }
   tags: string[];
@@ -25,6 +25,9 @@ export type Org = {
   email: string;
   media: string;
   orgUser: firestore.DocumentReference;
+  tags: string[];
+  // do we not need org tags?
+  // should we also include useremail here?
 }
 
 export type UserInfo = {

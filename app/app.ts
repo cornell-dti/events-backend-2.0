@@ -6,8 +6,9 @@ import { Express } from "express";
 import * as Logger from "./logging/logger";
 // import * as handler from "./handler";
 import * as userHandler from "./handlers/userHandler";
+import * as eventHandler from "./handlers/eventHandler";
 import * as orgHandler from "./handlers/orgHandler";
-import { db } from "./util/firebase";
+import { db } from "./util/firebase"
 import { authenticate } from "./auth";
 
 // Express ---------------------------------------------------------------------
@@ -56,25 +57,11 @@ const shell = async (
         res.status(400).json(error);
       });
   }
-};
+}
 
 function main() {
   app.use(express.json());
-  app.get("/", (req, res) =>
-    shell(
-      undefined,
-      (dbv: any, reqv: Request, resv: Response) => {
-        resv.json({ test: "up!" });
-      },
-      false,
-      req,
-      res,
-      [db, req, res]
-    )
-  );
-  app.get("/logs/", (req, res) =>
-    shell(Logger, Logger.getLogs, false, req, res, [db, req, res])
-  );
+  app.get('/', (req: Request, res: Response) => shell(undefined, (dbv: any, reqv: Request, resv: Response) => { resv.json({ "test": "up!" }) }, req, res, [db, req, res]));
 
   app.post("/createUser/", (req, res) =>
     shell(userHandler, userHandler.createUser, true, req, res, [db, req, res])

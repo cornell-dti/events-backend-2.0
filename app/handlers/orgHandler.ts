@@ -3,7 +3,8 @@
 import { Request, Response } from "express-serve-static-core";
 import { firestore } from "firebase";
 import { Org } from "../types";
-import { UpdateOrgRequest, GetOrgRequest, CreateOrgRequest } from "../requestTypes";
+import { UpdateOrgRequest, GetOrgRequest, CreateOrgRequest, GetAllOrgsRequest } from "../requestTypes";
+import { materialize } from "../util/commonOps";
 
 export const createOrg = async (
   db: firestore.Firestore,
@@ -18,8 +19,13 @@ export const createOrg = async (
     orgUser: userRef,
   };
   const orgRef = db.collection("organizations").doc();
-  await orgRef.set(org);
-  return "Org successfully created!";
+  return orgRef.set(org).then(
+    async doc => {
+      return { orgId : orgRef.id };
+    }).catch(
+    async error => {
+     return { error : error };
+    });
 };
 
 export const getOrg = async (
@@ -31,6 +37,19 @@ export const getOrg = async (
   const orgRef = db.collection("organizations").doc(id);
   return await orgRef.get();
 };
+
+export const getAllOrgs = async(
+  db: firestore.Firestore,
+  req: Request,
+  res: Response
+): Promise<any> => {
+  let {id } = req.body as GetAllOrgsRequest;
+
+  const orgs_snapshot = await db.collection("organizations").get();
+  return orgs_snapshot.docs.map(org=>materialize(org.data()));
+
+
+}
 
 export const updateOrg = async (
   db: firestore.Firestore,
