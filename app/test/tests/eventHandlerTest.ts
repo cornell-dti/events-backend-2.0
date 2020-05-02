@@ -49,7 +49,7 @@ export async function runCreateTest(db: firestore.Firestore) {
 // Get Event Test
 export async function runGetTest(db: firestore.Firestore) {
   let mockBody: GetEventRequest = {
-    eventId: "event"
+    eventId: "event-1"
   };
 
   let mockRequest = new MockExpressRequest({
