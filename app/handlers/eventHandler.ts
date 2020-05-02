@@ -91,20 +91,13 @@ export async function incrementAttendance(db: firestore.Firestore, req: Request,
   let event_id = request.eventId;
   let eventDocRef = db.collection('events').doc(event_id);
 
-  return db.runTransaction(transaction => {
-    return transaction.get(eventDocRef).then( doc => {
-      if (!doc.exists) {
-        throw "Document does not exist!";
-      }
-  
-      var attendance = doc.data()?.numAttendees + 1;
-      transaction.update(eventDocRef, {numAttendees: attendance});
-      return attendance;
-    });
-  }).then(function(attendance) {
-      return {attendance : attendance};
-  }).catch( error => {
-      return { error: error };
+  const a = admin.firestore.FieldValue.increment(1);
+  return eventDocRef.update({numAttendees: admin.firestore.FieldValue.increment(1)}).then(() => {
+    return {incremented: true};
+  })
+  .catch(error => {
+    console.log("Error incrementing attendence");
+    return { error: error };
   });
 }
 
@@ -113,24 +106,11 @@ export async function decrementAttendance(db: firestore.Firestore, req: Request,
   let event_id = request.eventId;
   let eventDocRef = db.collection('events').doc(event_id);
   
-  return db.runTransaction(transaction => {
-    return transaction.get(eventDocRef).then( doc => {
-      if (!doc.exists) {
-        throw "Document does not exist!";
-      }
-  
-      var attendance = doc.data()?.numAttendees - 1;
-      if (attendance >= 0 ) {
-        transaction.update(eventDocRef, {numAttendees: attendance});
-        return attendance;
-      } else {
-        return Promise.reject("Attendance is less than 0");
-      }
-    });
-  }).then(function(attendance) {
-      return {attendance : attendance};
-  }).catch( error => {
-    // Attendance is too low
-      return { error: error };
+  return eventDocRef.update({numAttendees: admin.firestore.FieldValue.increment(-1)}).then(() => {
+    return {decremented: true};
+  })
+  .catch(error => {
+    console.log("Error decrementing attendence");
+    return { error: error };
   });
 }

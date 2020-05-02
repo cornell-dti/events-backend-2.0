@@ -144,7 +144,7 @@ export async function runIncrememntAttendanceTest(db: firestore.Firestore) {
   let mockResult = mockResponse._getJSON();
 
   describe("Event description should be correct")
-    .expect(mockResult?.numAttendees).toBe.equalTo("1");
+    .expect(mockResult?.incremented).toBe.equalTo(true);
 }
 
 export async function runDecrementAttendanceTest(db: firestore.Firestore) {
@@ -168,5 +168,5 @@ export async function runDecrementAttendanceTest(db: firestore.Firestore) {
   let mockResult = mockResponse._getJSON();
 
   describe("Event description should be correct")
-    .expect(mockResult?.numAttendees).toBe.equalTo("0");
+    .expect(mockResult?.decremented).toBe.equalTo(true);
 }
