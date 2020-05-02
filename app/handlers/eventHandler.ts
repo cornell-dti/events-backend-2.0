@@ -85,7 +85,7 @@ export async function deleteEvent(db: firestore.Firestore, req: Request, res: Re
   });
 }
 
-// Attendance - Using Transactions!
+// Attendance 
 export async function incrementAttendance(db: firestore.Firestore, req: Request, res: Response): Promise<any> {
   let request = req.body as IncrementAttendanceRequest;
   let event_id = request.eventId;
