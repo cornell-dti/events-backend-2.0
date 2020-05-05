@@ -126,6 +126,26 @@ export async function runGetAllTest(db: firestore.Firestore) {
   describe("There are events associated with this email").expect(mockResult).is.defined();
 }
 
+// Get Events for the Feed
+export async function runGetEventFeedTest(db: firestore.Firestore) {
+
+  let mockRequest = new MockExpressRequest({
+    method: "GET",
+    url: "/getEventFeed/",
+    body: {}
+  });
+
+  let mockResponse = new MockExpressResponse();
+
+  // Simulate the app's sending of handler output to response
+  mockResponse.json(
+    await eventHandler.getEventFeed(db, mockRequest, mockResponse)
+  );
+
+  let mockResult = mockResponse._getJSON();
+  describe("There are events associated with this email").expect(mockResult.length).toBe.equalTo(2);
+}
+
 // Delete Event
 export async function runDeleteTest(db: firestore.Firestore) {
   let mockBody: DeleteEventRequest = {

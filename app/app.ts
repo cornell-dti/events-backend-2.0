@@ -64,6 +64,7 @@ function main() {
   app.get('/editEvent/',(req: Request, res: Response) => shell(eventHandler, eventHandler.editEvent, req, res, [db, req, res]));
   app.get('/getEvent/', (req: Request, res: Response) => shell(eventHandler, eventHandler.getEvent, req, res, [db, req, res]));
   app.get('/getEvents/', (req: Request, res: Response) => shell(eventHandler, eventHandler.getEvents, req, res, [db, req, res]));
+  app.get('/getEventFeed/', (req: Request, res: Response) => shell(eventHandler, eventHandler.getEventFeed, req, res, [db, req, res]));
   app.delete('/deleteEvent/', (req: Request, res: Response) => shell(eventHandler, eventHandler.deleteEvent, req, res, [db, req, res]));
 
   // Orgs
