@@ -17,6 +17,7 @@ export type GetUserRequest = {
 
 // Organization Requests -------------------------------------------------------
 export type UpdateOrgRequest = {
+  id: string;
   name: string;
   bio: string;
   website: string;
@@ -34,6 +35,10 @@ export type GetOrgRequest = {
   // since we are using uid instead of email for orgs
   // when we fire get ORG how can we know the uid before hand
   // won't we have to query the name field of every documen?
+}
+
+export type DeleteOrgRequest = {
+  id:string;
 }
 
 export type GetAllOrgsRequest = {

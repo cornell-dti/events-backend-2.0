@@ -66,6 +66,13 @@ function main() {
   app.get('/getEvents/', (req: Request, res: Response) => shell(eventHandler, eventHandler.getEvents, req, res, [db, req, res]));
   app.delete('/deleteEvent/', (req: Request, res: Response) => shell(eventHandler, eventHandler.deleteEvent, req, res, [db, req, res]));
 
+  // Orgs
+  app.post('/createOrg/',(req: Request, res: Response) => shell(orgHandler, orgHandler.createOrg, req, res, [db, req, res]));
+  app.get('/getOrg/', (req: Request, res: Response) => shell(orgHandler, orgHandler.getOrg, req, res, [db, req, res]));
+  app.post('/updateOrg/', (req: Request, res: Response) => shell(orgHandler, orgHandler.updateOrg, req, res, [db, req, res]));
+  app.get('/getAllOrgs/', (req: Request, res: Response) => shell(orgHandler, orgHandler.getAllOrgs, req, res, [db, req, res]));
+  app.delete('/deleteOrg/', (req: Request, res: Response) => shell(orgHandler, orgHandler.deleteOrg, req, res, [db, req, res]));
+
   app.post("/createUser/", (req, res) =>
     shell(userHandler, userHandler.createUser, true, req, res, [db, req, res])
   );
@@ -74,16 +81,6 @@ function main() {
   );
   app.delete("/deleteUser/", (req, res) =>
     shell(userHandler, userHandler.deleteUser, true, req, res, [db, req, res])
-  );
-
-  app.post("/createOrg/", (req, res) =>
-    shell(orgHandler, orgHandler.createOrg, false, req, res, [db, req, res])
-  );
-  app.get("/getOrg/", (req, res) =>
-    shell(orgHandler, orgHandler.getOrg, false, req, res, [db, req, res])
-  );
-  app.post("/updateOrg/:orgID", (req, res) =>
-    shell(orgHandler, orgHandler.updateOrg, false, req, res, [db, req, res])
   );
 
   app.listen(port, () => console.log(`Backend running on http://localhost:${port}`));
