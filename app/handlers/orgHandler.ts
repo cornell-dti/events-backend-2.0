@@ -57,6 +57,6 @@ export const updateOrg = async (
   res: Response
 ): Promise<any> => {
   let request = req.body as UpdateOrgRequest;
-  const orgRef = db.collection("organizations").doc();
+  const orgRef = db.collection("organizations").doc(req.params.orgID);
   return await orgRef.update(request);
 };
