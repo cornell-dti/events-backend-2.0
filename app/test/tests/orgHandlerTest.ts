@@ -2,7 +2,7 @@ import * as orgHandler from "../../handlers/orgHandler";
 import { firestore } from 'firebase';
 import { describe } from '../testExtensions';
 import * as runTests from '../runTests';
-import { CreateOrgRequest } from '../../requestTypes';
+import { DeleteOrgRequest, CreateOrgRequest } from '../../requestTypes';
 var MockExpressRequest = require('mock-express-request');
 var MockExpressResponse = require('mock-express-response');
 
@@ -17,6 +17,7 @@ export async function runCreateOrgTest(db: firestore.Firestore) {
     tags:["social"],
     website:"https://www.cornelldti.org/"
   }
+  
   
   let mockRequest = new MockExpressRequest(
     {
@@ -57,5 +58,41 @@ export async function runCreateOrgTest(db: firestore.Firestore) {
   // Simulate the app's sending of handler output to resposne
 
 }
+
+export async function runDeleteOrgTest(db: firestore.Firestore) {
+  let mockBody : DeleteOrgRequest = {
+    id: "7JZuSw9xgQVUI5JAJMiz"
+  }
+  
+  let mockRequest = new MockExpressRequest(
+    {
+      method: 'DELETE',
+      url: '/deleteOrg/',
+      body: mockBody
+    });
+  
+  let mockResponse = new MockExpressResponse();
+  //let preDoc = db.collection('organizations').doc('dti@gmail.com')
+  // do we plan on searching orgs by their email or useremail?
+  // can one account email create multiple orgs?
+  
+  mockResponse.json(
+    await orgHandler.deleteOrg(db, mockRequest, mockResponse)
+  );
+  
+  let mockresult = mockResponse._getJSON();
+  const orgRef = await db.collection('organizations').doc("7JZuSw9xgQVUI5JAJMiz").get();
+ 
+    describe("Expect org user 7JZuSw9xgQVUI5JAJMiz to be deleted ")
+    .expect(orgRef.exists).toBe.equalTo(false);
+    
+  }
+
+
+  // Simulate the app's sending of handler output to resposne
+
+
+
+
 
 

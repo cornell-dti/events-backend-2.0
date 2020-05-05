@@ -20,7 +20,10 @@ export async function runDeleteTest(db: firestore.Firestore) {
   let mockRequest = new MockExpressRequest({
     method: "POST",
     url: "/deleteUser/",
-    body: mockBody
+    body: mockBody,
+    authInfo: {
+      email: "sirenochen@gmail.com"
+    }
   });
   let mockResponse = new MockExpressResponse();
   let preDoc = db.collection("users").doc("sirenochen@gmail.com");
@@ -60,7 +63,10 @@ export async function runCreateTest(db: firestore.Firestore) {
   let mockRequest = new MockExpressRequest({
     method: "POST",
     url: "/createUser/",
-    body: mockBody
+    body: mockBody,
+    authInfo: {
+      email: "sirenochen@gmail.com"
+    }
   });
   let mockResponse = new MockExpressResponse();
   let preDoc = db.collection("users").doc("sirenochen@gmail.com");
@@ -98,7 +104,10 @@ export async function runGetTest(db: firestore.Firestore) {
   let mockRequest = new MockExpressRequest({
     method: "GET",
     url: "/getUser/",
-    body: mockBody
+    body: mockBody,
+    authInfo: {
+      email: "sirenochen@gmail.com"
+    }
   });
   let mockResponse = new MockExpressResponse();
   let preDoc = db.collection("users").doc("sirenochen@gmail.com");
