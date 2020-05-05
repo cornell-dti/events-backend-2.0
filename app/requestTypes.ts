@@ -61,6 +61,23 @@ export type CreateEventRequest = {
   media: string; 
 }
 
+export type EditEventRequest = {
+  eventId: string;
+  event: {
+    name?: string;
+    description?: string;
+    startDate?: Date;
+    endDate?: Date;
+    location?: {
+      room: string;
+      placeId: string;
+      building: string;
+    }
+    tags?: string[];
+    media?: string; 
+  }
+}
+
 export type GetEventRequest = {
   eventId: string;
 }
