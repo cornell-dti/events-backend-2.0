@@ -6,9 +6,9 @@
   "scripts": {
     "installAll": "npm i && cd test-suite-app/test-suite-app/ && npm i",
     "test": "concurrently \"ts-node app/test/runTests.ts ui\" \"cd test-suite-app/test-suite-app/ && npm start\"",
-    "terminalTest": "ts-node app/test/runTests.ts log",
+    "terminalTest": "ts-node --files app/test/runTests.ts log",
     "tsc": "tsc",
-    "start": "ts-node app/app.ts > logs.txt"
+    "start": "ts-node --files app/app.ts > logs.txt"
   },
   "repository": {
     "type": "git",
