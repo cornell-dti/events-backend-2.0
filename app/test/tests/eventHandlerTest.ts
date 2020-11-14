@@ -95,8 +95,8 @@ export async function runGetTest(db: firestore.Firestore) {
   );
 
   let mockResult = mockResponse._getJSON();
-  describe("Event name should be correct").expect(mockResult?.name).toBe.equalTo("barb-eve");
-  describe("Event description should be correct").expect(mockResult?.description).toBe.equalTo("eve is the best");
+  describe("Event name should be correct").expect(mockResult?.name).toBe.equalTo("social distance please");
+  describe("Event description should be correct").expect(mockResult?.description).toBe.equalTo("hope you guys are staying healthy");
   describe("Event has a room").expect(mockResult?.location.room).toBe.equalTo("stay home");
   describe("Event has an organizer").expect(mockResult?.organizer).is.defined();
   describe("Event has no media").expect(mockResult?.media).toBe.equalTo("");
@@ -123,7 +123,7 @@ export async function runGetAllTest(db: firestore.Firestore) {
   );
 
   let mockResult = mockResponse._getJSON();
-  describe("There are events associated with this email").expect(mockResult).is.defined();
+  describe("Events returned is defined").expect(mockResult).is.defined();
 }
 
 // Get Events for the Feed
@@ -143,7 +143,7 @@ export async function runGetEventFeedTest(db: firestore.Firestore) {
   );
 
   let mockResult = mockResponse._getJSON();
-  describe("There are events associated with this email").expect(mockResult.length).toBe.equalTo(2);
+  describe("Event feed is defined").expect(mockResult).is.defined();
 }
 
 // Delete Event

@@ -5,7 +5,7 @@
   "main": "app.ts",
   "scripts": {
     "installAll": "npm i && cd test-suite-app/test-suite-app/ && npm i",
-    "test": "concurrently \"ts-node app/test/runTests.ts ui\" \"cd test-suite-app/test-suite-app/ && npm start\"",
+    "test": "concurrently \"ts-node --files app/test/runTests.ts ui\" \"cd test-suite-app/test-suite-app/ && npm start\"",
     "terminalTest": "ts-node --files app/test/runTests.ts log",
     "tsc": "tsc",
     "start": "ts-node --files app/app.ts > logs.txt"
@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/JBoss925/EventsBackend#readme",
   "dependencies": {
-    "@firebase/firestore-types": "^1.8.0",
+    "@firebase/firestore-types": "^1.14.0",
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.2",
     "@types/firebase": "^3.2.1",
