@@ -18,7 +18,6 @@ export async function runCreateOrgTest(db: firestore.Firestore) {
     website:"https://www.cornelldti.org/"
   }
   
-  
   let mockRequest = new MockExpressRequest(
     {
       method: 'POST',
